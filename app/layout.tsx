@@ -26,9 +26,6 @@ export const metadata: Metadata = {
   },
   description:
     "A premium boutique gym. Group classes, 1-on-1 coaching, and membership built around you. Mobile-first scheduling and membership demo.",
-  icons: {
-    icon: { url: "/favicon.svg", type: "image/svg+xml" },
-  },
   openGraph: {
     type: "website",
     url: siteUrl,
