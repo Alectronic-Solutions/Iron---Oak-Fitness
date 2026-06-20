@@ -1,0 +1,36 @@
+# Keep Claude's context lean — ignore generated, vendored, and binary files.
+
+# dependencies & build output
+node_modules/
+.next/
+out/
+dist/
+build/
+.turbo/
+.vercel/
+
+# lockfiles & logs
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+*.log
+
+# env & local
+.env*
+*.tsbuildinfo
+
+# claude code internals
+.snapshots/
+
+# binary / heavy static assets
+public/**/*.png
+public/**/*.jpg
+public/**/*.jpeg
+public/**/*.gif
+public/**/*.webp
+public/**/*.avif
+public/**/*.svg
+public/**/*.ico
+public/**/*.mp4
+public/**/*.woff
+public/**/*.woff2

@@ -1,0 +1,251 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------ */
+/*  Iron & Oak - design tokens (Tailwind v4 @theme)                    */
+/*  Tokens here generate utilities, e.g. bg-ink, text-bronze, etc.     */
+/* ------------------------------------------------------------------ */
+@theme {
+  /* Surfaces - "Iron" (dark, industrial) */
+  --color-ink: #0e0f11;
+  --color-charcoal: #16181c;
+  --color-charcoal-2: #1e2126;
+  --color-line: #2a2d33;
+
+  /* Accents - "Oak" (warm, natural) */
+  --color-oak: #b07a3c;
+  --color-oak-soft: #cda06a;
+  --color-bronze: #c9a227;
+  --color-moss: #2f3b2f;
+
+  /* Text */
+  --color-bone: #f4f1ea;
+  --color-bone-muted: #b9b4a8;
+  --color-bone-faint: #807c72;
+
+  /* Fonts (wired up in app/layout.tsx via next/font) */
+  --font-display: var(--font-oswald), "Arial Narrow", sans-serif;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+
+  /* Page width */
+  --spacing-shell: 80rem;
+
+  /* Motion */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ------------------------------------------------------------------ */
+/*  Base                                                              */
+/* ------------------------------------------------------------------ */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-ink);
+    color: var(--color-bone);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    line-height: 0.98;
+    letter-spacing: -0.01em;
+  }
+
+  h1 {
+    line-height: 0.9;
+  }
+
+  ::selection {
+    background-color: var(--color-bronze);
+    color: var(--color-ink);
+  }
+
+  /* Accessible focus ring */
+  :focus-visible {
+    outline: 2px solid var(--color-bronze);
+    outline-offset: 2px;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Small utilities / helpers                                         */
+/* ------------------------------------------------------------------ */
+@layer components {
+  /* Centered page shell */
+  .shell {
+    width: 100%;
+    max-width: var(--spacing-shell);
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+
+    @media (min-width: 768px) {
+      padding-inline: 2rem;
+    }
+
+    @media (min-width: 1024px) {
+      padding-inline: 2.5rem;
+    }
+  }
+
+  /* Uppercase tracked label (eyebrows, nav, buttons) */
+  .eyebrow {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.75rem;
+    color: var(--color-oak-soft);
+  }
+
+  /* Eyebrow with decorative rules on both sides */
+  .eyebrow-ruled {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.75rem;
+    color: var(--color-oak-soft);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .eyebrow-ruled::before,
+  .eyebrow-ruled::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background-color: rgba(176, 122, 60, 0.4);
+    max-width: 3rem;
+  }
+
+  /* Oak gradient text */
+  .text-gradient-oak {
+    background: linear-gradient(
+      90deg,
+      var(--color-oak-soft) 0%,
+      var(--color-bronze) 50%,
+      var(--color-oak) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Subtle film-grain / vignette feel for hero sections */
+  .grain {
+    background-image: radial-gradient(
+      120% 120% at 50% 0%,
+      rgba(176, 122, 60, 0.12) 0%,
+      rgba(14, 15, 17, 0) 55%
+    );
+  }
+
+  /* Atmospheric hero background - layered gradients, no image required */
+  .hero-bg {
+    background-image:
+      radial-gradient(
+        ellipse 80% 60% at 50% -10%,
+        rgba(176, 122, 60, 0.22) 0%,
+        rgba(14, 15, 17, 0) 70%
+      ),
+      radial-gradient(
+        ellipse 60% 50% at -10% 100%,
+        rgba(47, 59, 47, 0.35) 0%,
+        rgba(14, 15, 17, 0) 65%
+      ),
+      repeating-linear-gradient(
+        30deg,
+        rgba(42, 45, 51, 0.18) 0px,
+        rgba(42, 45, 51, 0.18) 1px,
+        transparent 1px,
+        transparent 48px
+      );
+    background-color: var(--color-ink);
+  }
+
+  /* Category badge tones */
+  .badge-conditioning {
+    background-color: rgba(245, 158, 11, 0.15);
+    color: rgb(252, 211, 77);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+  }
+
+  .badge-mobility {
+    background-color: rgba(16, 185, 129, 0.15);
+    color: rgb(110, 231, 183);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+  }
+
+  .badge-endurance {
+    background-color: rgba(59, 130, 246, 0.15);
+    color: rgb(147, 197, 253);
+    border: 1px solid rgba(59, 130, 246, 0.25);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Motion keyframes + utilities                                      */
+/* ------------------------------------------------------------------ */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes panelIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes riseIn {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@utility animate-fade {
+  animation: fadeIn 0.2s var(--ease-out-soft) both;
+}
+
+@utility animate-panel {
+  animation: panelIn 0.28s var(--ease-out-soft) both;
+}
+
+@utility animate-rise {
+  animation: riseIn 0.5s var(--ease-out-soft) both;
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
