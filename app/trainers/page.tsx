@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { TrainerCard } from "@/components/trainers/TrainerCard";
 import { trainers } from "@/lib/data/trainers";
@@ -23,8 +24,10 @@ export default function TrainersPage() {
       </section>
       <div className="shell py-12 sm:py-16">
         <div className="grid gap-5 sm:grid-cols-2 md:grid-cols-3">
-          {trainers.map((t) => (
-            <TrainerCard key={t.id} trainer={t} />
+          {trainers.map((t, i) => (
+            <Reveal key={t.id} delay={Math.min(i * 0.06, 0.3)}>
+              <TrainerCard trainer={t} />
+            </Reveal>
           ))}
         </div>
       </div>

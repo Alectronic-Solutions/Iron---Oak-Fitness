@@ -1,18 +1,15 @@
-import {
-  ArrowRight,
-  CalendarCheck,
-  Dumbbell,
-  HeartPulse,
-  Users,
-} from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Avatar } from "@/components/ui/Avatar";
 import { Badge } from "@/components/ui/Badge";
 import { CountUp } from "@/components/ui/CountUp";
 import { ButtonLink } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
+import { HeroHeading } from "@/components/ui/HeroHeading";
+import { PhotoFeatureCard } from "@/components/ui/PhotoFeatureCard";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { TestimonialCarousel } from "@/components/ui/TestimonialCarousel";
+import { TiltCard } from "@/components/ui/TiltCard";
 import { ParallaxBg } from "@/components/ui/ParallaxBg";
 import { PhotoBand } from "@/components/ui/PhotoBand";
 import { ClassCard } from "@/components/schedule/ClassCard";
@@ -32,22 +29,32 @@ const stats = [
 
 const valueProps = [
   {
-    icon: Dumbbell,
+    photo: {
+      src: "https://images.pexels.com/photos/703016/pexels-photo-703016.jpeg?auto=compress&cs=tinysrgb&w=600",
+      focus: "center 30%",
+    },
     title: "Coaching that sticks",
     body: "Certified coaches on every floor and in every class. Real technique, real progress.",
   },
   {
-    icon: Users,
+    photo: {
+      src: "https://images.pexels.com/photos/3289711/pexels-photo-3289711.jpeg?auto=compress&cs=tinysrgb&w=600",
+      focus: "center 20%",
+    },
     title: "Small by design",
     body: "Classes capped so you're seen, corrected and pushed. Never lost in the crowd.",
   },
   {
-    icon: CalendarCheck,
+    photo: {
+      src: "https://images.pexels.com/photos/1552106/pexels-photo-1552106.jpeg?auto=compress&cs=tinysrgb&w=600",
+    },
     title: "Train on your terms",
     body: "Book in seconds, switch anytime. Memberships and class packs that flex with life.",
   },
   {
-    icon: HeartPulse,
+    photo: {
+      src: "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=600",
+    },
     title: "Built to last",
     body: "Mobility and recovery baked into the program so you train hard for decades, not weeks.",
   },
@@ -101,11 +108,7 @@ export default function Home() {
             <span className="eyebrow-ruled inline-flex">
               Boutique strength &amp; conditioning
             </span>
-            <h1 className="mt-6 text-6xl uppercase leading-[0.9] text-bone sm:text-7xl md:text-6xl lg:text-8xl">
-              Strength,
-              <br />
-              <span className="text-gradient-oak">grounded.</span>
-            </h1>
+            <HeroHeading />
             <p className="mt-6 max-w-md text-lg leading-relaxed text-bone-muted">
               Coaching, classes and community built to make you stronger for
               life, not just for summer. Train on iron, grounded in oak.
@@ -201,16 +204,16 @@ export default function Home() {
         />
         <div className="mt-14 grid gap-5 sm:grid-cols-2 md:grid-cols-4">
           {valueProps.map((prop, i) => (
-            <Reveal key={prop.title} delay={i * 0.08}>
-              <Card interactive glass className="h-full p-7">
-                <span className="grid h-12 w-12 place-items-center rounded-xl bg-oak/20 text-oak-soft">
-                  <prop.icon className="h-6 w-6" />
-                </span>
-                <h3 className="mt-6 text-xl uppercase text-bone">{prop.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-bone-muted">
-                  {prop.body}
-                </p>
-              </Card>
+            <Reveal key={prop.title} delay={i * 0.08} className="h-full">
+              <TiltCard className="h-full">
+                <PhotoFeatureCard
+                  src={prop.photo.src}
+                  focus={prop.photo.focus}
+                  title={prop.title}
+                  body={prop.body}
+                  className="h-full"
+                />
+              </TiltCard>
             </Reveal>
           ))}
         </div>

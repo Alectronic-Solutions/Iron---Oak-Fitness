@@ -42,3 +42,12 @@ export const WEEKDAY_LABELS: Record<Weekday, string> = {
 export function byWeekday(a: Weekday, b: Weekday): number {
   return WEEKDAYS.indexOf(a) - WEEKDAYS.indexOf(b);
 }
+
+/** Discount applied to membership pricing when billed annually. */
+export const ANNUAL_DISCOUNT = 0.15;
+
+/** Effective monthly price for a plan, discounted when billed annually. */
+export function displayPrice(monthly: number, annual: boolean): number {
+  const base = annual ? monthly * (1 - ANNUAL_DISCOUNT) : monthly;
+  return Math.round(base);
+}

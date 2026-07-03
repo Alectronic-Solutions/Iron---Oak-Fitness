@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { Check, ChevronDown, Minus } from "lucide-react";
 import { ButtonLink } from "@/components/ui/Button";
+import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { PricingCard } from "@/components/membership/PricingCard";
+import { PricingGrid } from "@/components/membership/PricingGrid";
 import { ClassPackCard } from "@/components/membership/ClassPackCard";
 import { plans, classPacks } from "@/lib/data/plans";
 
@@ -77,11 +78,7 @@ export default function MembershipPage() {
 
       {/* Plans */}
       <section className="shell py-16 sm:py-24">
-        <div className="grid gap-5 pt-3 md:grid-cols-3">
-          {plans.map((plan) => (
-            <PricingCard key={plan.id} plan={plan} />
-          ))}
-        </div>
+        <PricingGrid plans={plans} />
       </section>
 
       {/* Comparison */}
@@ -159,8 +156,10 @@ export default function MembershipPage() {
           description="Prefer to pay as you go? Buy a pack and use it whenever - the more you buy, the less you pay per class."
         />
         <div className="mt-12 grid gap-5 sm:grid-cols-2 md:grid-cols-4">
-          {classPacks.map((pack) => (
-            <ClassPackCard key={pack.id} pack={pack} />
+          {classPacks.map((pack, i) => (
+            <Reveal key={pack.id} delay={Math.min(i * 0.06, 0.24)}>
+              <ClassPackCard pack={pack} />
+            </Reveal>
           ))}
         </div>
       </section>

@@ -1,11 +1,22 @@
+"use client";
+
 import { Check } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
 import { Badge } from "@/components/ui/Badge";
 import { ButtonLink } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
-import { cn, formatPrice } from "@/lib/utils";
+import { cn, displayPrice, formatPrice } from "@/lib/utils";
 import type { MembershipPlan } from "@/types";
 
-export function PricingCard({ plan }: { plan: MembershipPlan }) {
+export function PricingCard({
+  plan,
+  annual = false,
+}: {
+  plan: MembershipPlan;
+  annual?: boolean;
+}) {
+  const price = displayPrice(plan.priceMonthly, annual);
+
   return (
     <Card
       className={cn(
@@ -24,12 +35,26 @@ export function PricingCard({ plan }: { plan: MembershipPlan }) {
       <h3 className="text-2xl uppercase text-bone">{plan.name}</h3>
       <p className="mt-1 text-sm text-bone-muted">{plan.blurb}</p>
 
-      <div className="mt-5 flex items-baseline gap-1.5">
-        <span className="font-display text-5xl text-bone">
-          {formatPrice(plan.priceMonthly)}
-        </span>
+      <div className="relative mt-5 flex items-baseline gap-1.5">
+        <AnimatePresence mode="wait">
+          <motion.span
+            key={annual ? "annual" : "monthly"}
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 8 }}
+            transition={{ duration: 0.22 }}
+            className="font-display text-5xl text-bone"
+          >
+            {formatPrice(price)}
+          </motion.span>
+        </AnimatePresence>
         <span className="text-sm text-bone-faint">/ month</span>
       </div>
+      {annual && (
+        <p className="mt-1 text-xs text-oak-soft">
+          Save {formatPrice((plan.priceMonthly - price) * 12)}/year
+        </p>
+      )}
 
       <ul className="mt-6 flex-1 space-y-3">
         {plan.perks.map((perk) => (

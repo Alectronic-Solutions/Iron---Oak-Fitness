@@ -130,7 +130,7 @@ export function Header() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 top-16 z-40 bg-ink md:hidden"
+            className="fixed inset-0 top-16 z-40 cursor-default bg-ink md:hidden"
             onClick={() => setOpen(false)}
           >
             <nav className="shell flex flex-col gap-1 py-6">

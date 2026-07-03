@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { ClipboardCheck, Gauge, Target, Trophy } from "lucide-react";
 import { ButtonLink } from "@/components/ui/Button";
-import { Card } from "@/components/ui/Card";
+import { PhotoFeatureCard } from "@/components/ui/PhotoFeatureCard";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { TiltCard } from "@/components/ui/TiltCard";
 import { TrainingBooker } from "@/components/trainers/TrainingBooker";
 import { ParallaxBg } from "@/components/ui/ParallaxBg";
 import { PhotoBand } from "@/components/ui/PhotoBand";
@@ -15,22 +15,33 @@ export const metadata: Metadata = {
 
 const benefits = [
   {
-    icon: Target,
+    photo: {
+      src: "https://images.pexels.com/photos/1552242/pexels-photo-1552242.jpeg?auto=compress&cs=tinysrgb&w=600",
+      focus: "center 40%",
+    },
     title: "Built for your goals",
     body: "A program written for your body, your schedule and what you actually want to achieve.",
   },
   {
-    icon: Gauge,
+    photo: {
+      src: "https://images.pexels.com/photos/3289711/pexels-photo-3289711.jpeg?auto=compress&cs=tinysrgb&w=600",
+      focus: "center 20%",
+    },
     title: "Faster progress",
     body: "Undivided attention means better technique, smarter loading and quicker results.",
   },
   {
-    icon: ClipboardCheck,
+    photo: {
+      src: "https://images.pexels.com/photos/703016/pexels-photo-703016.jpeg?auto=compress&cs=tinysrgb&w=600",
+      focus: "center 30%",
+    },
     title: "Real accountability",
     body: "A coach in your corner who tracks every session and keeps you showing up.",
   },
   {
-    icon: Trophy,
+    photo: {
+      src: "https://images.pexels.com/photos/1552106/pexels-photo-1552106.jpeg?auto=compress&cs=tinysrgb&w=600",
+    },
     title: "Master the lifts",
     body: "Dial in the squat, hinge, press and pull with eyes on every rep.",
   },
@@ -77,15 +88,15 @@ export default function TrainingPage() {
       <section className="shell py-16 sm:py-24">
         <div className="grid gap-5 sm:grid-cols-2 md:grid-cols-4">
           {benefits.map((b) => (
-            <Card key={b.title} className="p-6">
-              <span className="grid h-12 w-12 place-items-center rounded-xl bg-oak/15 text-oak-soft">
-                <b.icon className="h-6 w-6" />
-              </span>
-              <h3 className="mt-5 text-xl uppercase text-bone">{b.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-bone-muted">
-                {b.body}
-              </p>
-            </Card>
+            <TiltCard key={b.title} className="h-full">
+              <PhotoFeatureCard
+                src={b.photo.src}
+                focus={b.photo.focus}
+                title={b.title}
+                body={b.body}
+                className="h-full"
+              />
+            </TiltCard>
           ))}
         </div>
       </section>

@@ -62,9 +62,9 @@ const hours = [
 export function Footer() {
   return (
     <footer className="border-t border-line bg-charcoal">
-      <div className="shell grid gap-10 py-14 pb-28 sm:grid-cols-3 md:grid-cols-5 md:pb-14">
+      <div className="shell grid grid-cols-2 gap-x-6 gap-y-10 py-14 pb-28 sm:grid-cols-3 sm:gap-x-10 md:grid-cols-5 md:pb-14">
         {/* Brand */}
-        <div className="sm:col-span-3 md:col-span-2">
+        <div className="col-span-2 sm:col-span-3 md:col-span-2">
           <Link href="/" className="flex cursor-pointer items-center gap-2.5">
             <span className="grid h-9 w-9 place-items-center rounded-md bg-bronze text-ink">
               <Dumbbell className="h-5 w-5" />
@@ -145,7 +145,7 @@ export function Footer() {
         </div>
 
         {/* Visit */}
-        <div>
+        <div className="col-span-2 sm:col-span-3 md:col-span-1">
           <h3 className="eyebrow">Visit</h3>
           <ul className="mt-4 space-y-3 text-sm text-bone-muted">
             <li className="flex gap-2.5">
@@ -180,7 +180,7 @@ export function Footer() {
       </div>
 
       <div className="border-t border-line">
-        <div className="shell flex flex-col gap-4 py-5 text-xs text-bone-faint md:flex-row md:items-center md:justify-between">
+        <div className="shell flex flex-col gap-4 py-5 pb-24 text-xs text-bone-faint md:flex-row md:items-center md:justify-between md:pb-5">
           <p>© {new Date().getFullYear()} Iron &amp; Oak Fitness. All rights reserved.</p>
           <div className="flex flex-wrap gap-x-5 gap-y-2">
             {legal.map((l) => (
