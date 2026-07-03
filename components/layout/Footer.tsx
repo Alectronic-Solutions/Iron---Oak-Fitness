@@ -79,9 +79,9 @@ export function Footer() {
           </p>
           <div className="mt-5 flex gap-3">
             {[
-              { Icon: InstagramIcon, href: "https://instagram.com/ironandoakfitness", label: "Instagram" },
-              { Icon: XIcon, href: "https://x.com/ironandoakfit", label: "X / Twitter" },
-              { Icon: YoutubeIcon, href: "https://youtube.com/@ironandoakfitness", label: "YouTube" },
+              { Icon: InstagramIcon, href: "https://instagram.com", label: "Instagram" },
+              { Icon: XIcon, href: "https://x.com", label: "X / Twitter" },
+              { Icon: YoutubeIcon, href: "https://youtube.com", label: "YouTube" },
             ].map(({ Icon, href, label }) => (
               <a
                 key={href}
@@ -207,11 +207,6 @@ export function Footer() {
             </span>
             <BackToTop />
           </div>
-        </div>
-        <div className="shell pb-4">
-          <p className="text-xs text-bone-faint/50">
-            Demo project - no real payments are processed and all data is mock.
-          </p>
         </div>
       </div>
     </footer>

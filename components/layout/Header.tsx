@@ -62,61 +62,63 @@ export function Header() {
     pathname === href || pathname.startsWith(`${href}/`);
 
   return (
-    <header
-      className={cn(
-        "sticky top-0 z-40 border-b border-line bg-ink/85 backdrop-blur-md transition-shadow duration-300",
-        scrolled && "shadow-[0_1px_0_0_rgba(255,255,255,0.06)]",
-      )}
-    >
-      <div className="shell flex h-16 items-center justify-between gap-4">
-        <Wordmark />
+    <header className="sticky top-0 z-40 border-b border-line transition-shadow duration-300">
+      <div
+        className={cn(
+          "bg-ink/85 backdrop-blur-md transition-shadow duration-300",
+          scrolled && "shadow-[0_1px_0_0_rgba(255,255,255,0.06)]",
+        )}
+      >
+        <div className="shell flex h-16 items-center justify-between gap-4">
+          <Wordmark />
 
-        {/* Desktop nav */}
-        <nav className="hidden items-center gap-8 md:flex">
-          {navLinks.map((link) => (
+          {/* Desktop nav */}
+          <nav className="hidden items-center gap-8 md:flex">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={cn(
+                  "relative cursor-pointer font-display text-sm uppercase tracking-wider transition-colors",
+                  isActive(link.href)
+                    ? "text-oak-soft"
+                    : "text-bone-muted hover:text-bone",
+                )}
+              >
+                {link.label}
+                {isActive(link.href) && (
+                  <span className="absolute -bottom-0.5 left-0 right-0 h-px bg-oak-soft" />
+                )}
+              </Link>
+            ))}
+          </nav>
+
+          <div className="flex items-center gap-2">
             <Link
-              key={link.href}
-              href={link.href}
-              className={cn(
-                "relative cursor-pointer font-display text-sm uppercase tracking-wider transition-colors",
-                isActive(link.href)
-                  ? "text-oak-soft"
-                  : "text-bone-muted hover:text-bone",
-              )}
+              href="/account"
+              className="hidden cursor-pointer font-display text-sm uppercase tracking-wider text-bone-muted transition-colors hover:text-bone sm:block"
             >
-              {link.label}
-              {isActive(link.href) && (
-                <span className="absolute -bottom-0.5 left-0 right-0 h-px bg-oak-soft" />
-              )}
+              Sign in
             </Link>
-          ))}
-        </nav>
+            <ButtonLink
+              href="/membership"
+              size="sm"
+              className="hidden sm:inline-flex"
+            >
+              Join now
+            </ButtonLink>
 
-        <div className="flex items-center gap-2">
-          <Link
-            href="/account"
-            className="hidden cursor-pointer font-display text-sm uppercase tracking-wider text-bone-muted transition-colors hover:text-bone sm:block"
-          >
-            Sign in
-          </Link>
-          <ButtonLink
-            href="/membership"
-            size="sm"
-            className="hidden sm:inline-flex"
-          >
-            Join now
-          </ButtonLink>
-
-          {/* Mobile menu toggle */}
-          <button
-            type="button"
-            onClick={() => setOpen((v) => !v)}
-            aria-label={open ? "Close menu" : "Open menu"}
-            aria-expanded={open}
-            className="grid h-10 w-10 cursor-pointer place-items-center rounded-md text-bone md:hidden"
-          >
-            {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
+            {/* Mobile menu toggle */}
+            <button
+              type="button"
+              onClick={() => setOpen((v) => !v)}
+              aria-label={open ? "Close menu" : "Open menu"}
+              aria-expanded={open}
+              className="grid h-10 w-10 cursor-pointer place-items-center rounded-md text-bone md:hidden"
+            >
+              {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
+          </div>
         </div>
       </div>
 
