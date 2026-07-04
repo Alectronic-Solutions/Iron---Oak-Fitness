@@ -25,10 +25,7 @@ export function PricingCard({
       )}
     >
       {plan.badge && (
-        <Badge
-          tone="oak"
-          className="absolute -top-3 left-6 bg-bronze text-ink"
-        >
+        <Badge tone="oak" className="mb-4 self-start whitespace-nowrap bg-bronze text-ink">
           {plan.badge}
         </Badge>
       )}

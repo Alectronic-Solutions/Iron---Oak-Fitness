@@ -11,6 +11,7 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { TestimonialCarousel } from "@/components/ui/TestimonialCarousel";
 import { TiltCard } from "@/components/ui/TiltCard";
 import { ParallaxBg } from "@/components/ui/ParallaxBg";
+import { VideoCrossfadeBg } from "@/components/ui/VideoCrossfadeBg";
 import { PhotoBand } from "@/components/ui/PhotoBand";
 import { ClassCard } from "@/components/schedule/ClassCard";
 import { TrainerCard } from "@/components/trainers/TrainerCard";
@@ -83,6 +84,12 @@ const testimonials = [
 
 const featuredSlugs = ["iron-foundations", "ember-hiit", "oak-flow"];
 
+const heroVideos = [
+  "https://videos.pexels.com/video-files/33514741/14253794_1920_1080_25fps.mp4",
+  "https://videos.pexels.com/video-files/5319998/5319998-uhd_2560_1440_25fps.mp4",
+  "https://videos.pexels.com/video-files/4108624/4108624-uhd_2560_1440_25fps.mp4",
+];
+
 export default function Home() {
   const featured = classes.filter((c) => featuredSlugs.includes(c.slug));
   const todaySlots = getSlotsByDay("Mon").slice(0, 3);
@@ -90,20 +97,17 @@ export default function Home() {
   return (
     <>
       {/* ─────────────────── Hero ─────────────────── */}
-      <ParallaxBg
-        src="https://images.pexels.com/photos/1552242/pexels-photo-1552242.jpeg?auto=compress&cs=tinysrgb&w=1920"
-        alt="Heavy barbell plates in a dark gym"
+      <VideoCrossfadeBg
+        sources={heroVideos}
         overlayClass="bg-ink/72"
-        speed={0.3}
-        priority
-        className="min-h-[100svh]"
+        className="min-h-[calc(100svh-4rem)]"
       >
         {/* warm oak glow accent */}
         <div className="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(176,122,60,0.25)_0%,transparent_70%)]" />
         {/* bottom fade to site bg */}
         <div className="pointer-events-none absolute inset-0 z-10 bg-linear-to-b from-transparent via-transparent to-ink/80" />
 
-        <div className="shell relative z-20 grid min-h-[100svh] gap-8 py-24 sm:py-32 md:grid-cols-2 md:items-center md:py-36 lg:py-44">
+        <div className="shell relative z-20 grid min-h-[calc(100svh-4rem)] gap-10 pt-14 pb-20 sm:pt-16 sm:pb-24 md:grid-cols-2 md:items-center md:pt-20 md:pb-28 lg:gap-16 lg:pt-24 lg:pb-32">
           <div className="animate-rise">
             <span className="eyebrow-ruled inline-flex">
               Boutique strength &amp; conditioning
@@ -176,7 +180,7 @@ export default function Home() {
             </Card>
           </div>
         </div>
-      </ParallaxBg>
+      </VideoCrossfadeBg>
 
       {/* ─────────────────── Stats ─────────────────── */}
       <section className="border-y border-oak/20 bg-ink">
@@ -184,7 +188,7 @@ export default function Home() {
           {stats.map((s, i) => (
             <Reveal key={s.label} delay={i * 0.1} className="py-10 text-center sm:py-20">
               <div className="mx-auto mb-3 w-8 border-t border-oak/30" />
-              <p className="font-display text-4xl text-oak-soft sm:text-7xl">
+              <p className="text-shine font-display text-4xl sm:text-7xl">
                 <CountUp value={s.value} />
               </p>
               <p className="mt-2 text-xs uppercase tracking-wider text-bone-faint">

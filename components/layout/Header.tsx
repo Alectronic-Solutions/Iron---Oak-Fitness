@@ -16,10 +16,18 @@ const navLinks = [
 ];
 
 function Wordmark({ onClick }: { onClick?: () => void }) {
+  const pathname = usePathname();
+
   return (
     <Link
       href="/"
-      onClick={onClick}
+      onClick={(e) => {
+        onClick?.();
+        if (pathname === "/") {
+          e.preventDefault();
+          window.location.href = "/";
+        }
+      }}
       className="group flex items-center gap-2.5"
       aria-label="Iron & Oak Fitness - home"
     >

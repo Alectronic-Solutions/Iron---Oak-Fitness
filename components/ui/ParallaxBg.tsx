@@ -33,14 +33,16 @@ export function ParallaxBg({
     offset: ["start end", "end start"],
   });
 
-  const travel = speed * 120;
+  const travel = speed * 220;
   const yFull = useTransform(scrollYProgress, [0, 1], [`${travel}px`, `-${travel}px`]);
   const yStill = useTransform(scrollYProgress, [0, 1], ["0px", "0px"]);
+  const scaleFull = useTransform(scrollYProgress, [0, 0.5, 1], [1.08, 1, 1.08]);
   const y = shouldReduce ? yStill : yFull;
+  const scale = shouldReduce ? 1 : scaleFull;
 
   return (
     <div ref={ref} className={cn("relative overflow-hidden", className)}>
-      <motion.div style={{ y }} className="absolute inset-[-15%] w-full">
+      <motion.div style={{ y, scale }} className="absolute inset-[-15%] w-full">
         <Image
           src={src}
           alt={alt}
