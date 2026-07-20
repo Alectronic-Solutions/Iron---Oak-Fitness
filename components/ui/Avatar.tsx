@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 interface AvatarProps {
@@ -14,6 +15,8 @@ const sizes = {
   lg: "h-16 w-16 text-lg",
   xl: "h-24 w-24 text-2xl",
 };
+
+const pixelSizes = { sm: 36, md: 48, lg: 64, xl: 96 };
 
 const gradients = [
   "from-oak-soft via-oak to-bronze",
@@ -40,10 +43,11 @@ export function Avatar({ initials, size = "md", colorKey, image, className }: Av
           className,
         )}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <Image
           src={image}
           alt={initials}
+          width={pixelSizes[size]}
+          height={pixelSizes[size]}
           className="h-full w-full object-cover"
         />
       </span>

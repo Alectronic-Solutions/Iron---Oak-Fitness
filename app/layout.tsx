@@ -1,45 +1,55 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Oswald, Inter } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { MobileCtaBar } from "@/components/layout/MobileCtaBar";
+import { SITE_URL, SITE_NAME, SITE_TAGLINE, SITE_DESCRIPTION } from "@/lib/site";
+import { localBusinessSchema } from "@/lib/structuredData";
 
 const oswald = Oswald({
   subsets: ["latin"],
   variable: "--font-oswald",
   weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
+  display: "swap",
 });
 
-const siteUrl = "https://ironandoakfitness.vercel.app";
+export const viewport: Viewport = {
+  themeColor: "#0e0f11",
+  colorScheme: "dark",
+};
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "Iron & Oak Fitness - Strength, grounded.",
-    template: "%s · Iron & Oak Fitness",
+    default: `${SITE_NAME} - ${SITE_TAGLINE}`,
+    template: `%s · ${SITE_NAME}`,
   },
-  description:
-    "A premium boutique gym. Group classes, 1-on-1 coaching, and membership built around you. Mobile-first scheduling and membership demo.",
+  description: SITE_DESCRIPTION,
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     type: "website",
-    url: siteUrl,
-    siteName: "Iron & Oak Fitness",
-    title: "Iron & Oak Fitness — Strength, grounded.",
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    title: `${SITE_NAME} — ${SITE_TAGLINE}`,
     description:
       "A premium boutique gym. Group classes, 1-on-1 personal training, and flexible membership. Book in seconds.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Iron & Oak Fitness — Strength, grounded.",
+    title: `${SITE_NAME} — ${SITE_TAGLINE}`,
     description:
       "A premium boutique gym. Group classes, 1-on-1 personal training, and flexible membership. Book in seconds.",
   },
+  manifest: "/manifest.webmanifest",
 };
 
 export default function RootLayout({
@@ -48,9 +58,23 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${oswald.variable} ${inter.variable}`}>
       <body className="bg-ink text-bone antialiased">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(localBusinessSchema()),
+          }}
+        />
+        <a
+          href="#main-content"
+          className="sr-only focus-visible:not-sr-only focus-visible:fixed focus-visible:left-4 focus-visible:top-4 focus-visible:z-100 focus-visible:rounded-md focus-visible:bg-bronze focus-visible:px-4 focus-visible:py-2 focus-visible:font-display focus-visible:text-sm focus-visible:uppercase focus-visible:tracking-wider focus-visible:text-ink"
+        >
+          Skip to content
+        </a>
         <div className="flex min-h-dvh flex-col">
           <Header />
-          <main className="flex-1">{children}</main>
+          <main id="main-content" className="flex-1">
+            {children}
+          </main>
           <Footer />
         </div>
         <MobileCtaBar />

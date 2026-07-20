@@ -15,6 +15,10 @@ const nextConfig: NextConfig = {
         hostname: "images.pexels.com",
         pathname: "/photos/**",
       },
+      {
+        protocol: "https",
+        hostname: "i.pravatar.cc",
+      },
     ],
   },
 };

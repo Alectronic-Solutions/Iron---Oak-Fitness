@@ -18,11 +18,13 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 type Errors = Partial<Record<"name" | "email" | "message", string>>;
 
-function FieldError({ message }: { message?: string }) {
+function FieldError({ id, message }: { id: string; message?: string }) {
   return (
     <AnimatePresence>
       {message && (
         <motion.p
+          id={id}
+          role="alert"
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: "auto" }}
           exit={{ opacity: 0, height: 0 }}
@@ -113,9 +115,11 @@ export function ContactForm() {
                   id="name"
                   name="name"
                   placeholder="Your name"
+                  aria-invalid={!!errors.name}
+                  aria-describedby={errors.name ? "name-error" : undefined}
                   className={cn(fieldClass, errors.name && errorFieldClass)}
                 />
-                <FieldError message={errors.name} />
+                <FieldError id="name-error" message={errors.name} />
               </div>
               <div>
                 <label htmlFor="email" className={labelClass}>
@@ -126,9 +130,11 @@ export function ContactForm() {
                   name="email"
                   type="email"
                   placeholder="you@email.com"
+                  aria-invalid={!!errors.email}
+                  aria-describedby={errors.email ? "email-error" : undefined}
                   className={cn(fieldClass, errors.email && errorFieldClass)}
                 />
-                <FieldError message={errors.email} />
+                <FieldError id="email-error" message={errors.email} />
               </div>
             </div>
 
@@ -154,9 +160,11 @@ export function ContactForm() {
                 name="message"
                 rows={5}
                 placeholder="Tell us a little about your goals…"
+                aria-invalid={!!errors.message}
+                aria-describedby={errors.message ? "message-error" : undefined}
                 className={cn(fieldClass, errors.message && errorFieldClass)}
               />
-              <FieldError message={errors.message} />
+              <FieldError id="message-error" message={errors.message} />
             </div>
 
             <Button type="submit" size="lg" className="w-full">

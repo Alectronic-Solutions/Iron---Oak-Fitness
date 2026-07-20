@@ -1,6 +1,6 @@
 "use client";
 
-import { startTransition, useEffect, useState } from "react";
+import { startTransition, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Dumbbell, Menu, X } from "lucide-react";
@@ -45,6 +45,8 @@ export function Header() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const drawerRef = useRef<HTMLDivElement>(null);
+  const toggleRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
@@ -58,6 +60,39 @@ export function Header() {
     return () => {
       document.body.style.overflow = prev;
     };
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const drawer = drawerRef.current;
+    const focusable = drawer?.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled])',
+    );
+    focusable?.[0]?.focus();
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+        toggleRef.current?.focus();
+        return;
+      }
+      if (e.key !== "Tab" || !focusable || focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
   }, [open]);
 
   useEffect(() => {
@@ -81,7 +116,7 @@ export function Header() {
           <Wordmark />
 
           {/* Desktop nav */}
-          <nav className="hidden items-center gap-8 md:flex">
+          <nav aria-label="Primary" className="hidden items-center gap-8 md:flex">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -101,7 +136,7 @@ export function Header() {
             ))}
           </nav>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2" inert={open}>
             <Link
               href="/account"
               className="hidden cursor-pointer font-display text-sm uppercase tracking-wider text-bone-muted transition-colors hover:text-bone sm:block"
@@ -115,18 +150,19 @@ export function Header() {
             >
               Join now
             </ButtonLink>
-
-            {/* Mobile menu toggle */}
-            <button
-              type="button"
-              onClick={() => setOpen((v) => !v)}
-              aria-label={open ? "Close menu" : "Open menu"}
-              aria-expanded={open}
-              className="grid h-10 w-10 cursor-pointer place-items-center rounded-md text-bone md:hidden"
-            >
-              {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </button>
           </div>
+
+          {/* Mobile menu toggle */}
+          <button
+            ref={toggleRef}
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
+            className="grid h-10 w-10 cursor-pointer place-items-center rounded-md text-bone md:hidden"
+          >
+            {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
         </div>
       </div>
 
@@ -134,6 +170,7 @@ export function Header() {
       <AnimatePresence>
         {open && (
           <motion.div
+            ref={drawerRef}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -141,7 +178,7 @@ export function Header() {
             className="fixed inset-0 top-16 z-40 cursor-default bg-ink md:hidden"
             onClick={() => setOpen(false)}
           >
-            <nav className="shell flex flex-col gap-1 py-6">
+            <nav aria-label="Mobile" className="shell flex flex-col gap-1 py-6">
               {navLinks.map((link, i) => (
                 <motion.div
                   key={link.href}

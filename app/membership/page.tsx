@@ -6,6 +6,7 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { PricingGrid } from "@/components/membership/PricingGrid";
 import { ClassPackCard } from "@/components/membership/ClassPackCard";
 import { plans, classPacks } from "@/lib/data/plans";
+import { membershipOffersSchema } from "@/lib/structuredData";
 
 export const metadata: Metadata = {
   title: "Membership",
@@ -62,6 +63,12 @@ function Cell({ value }: { value: Cell }) {
 export default function MembershipPage() {
   return (
     <div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(membershipOffersSchema(plans)),
+        }}
+      />
       {/* Hero */}
       <section className="grain border-b border-line">
         <div className="shell py-14 text-center sm:py-20">

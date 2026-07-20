@@ -9,6 +9,7 @@ import { CertificationList } from "@/components/trainers/CertificationList";
 import { SpecialtyBadges } from "@/components/trainers/SpecialtyBadges";
 import { trainers, getTrainerBySlug } from "@/lib/data/trainers";
 import { getClassesByCoach } from "@/lib/data/classes";
+import { trainerPersonSchema } from "@/lib/structuredData";
 
 type Params = { params: Promise<{ slug: string }> };
 
@@ -34,6 +35,12 @@ export default async function TrainerProfilePage({ params }: Params) {
 
   return (
     <div className="shell py-10 sm:py-14">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(trainerPersonSchema(trainer)),
+        }}
+      />
       <Link
         href="/trainers"
         className="inline-flex items-center gap-2 text-sm text-bone-muted transition-colors hover:text-bone"

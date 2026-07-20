@@ -20,7 +20,7 @@
   /* Text */
   --color-bone: #f4f1ea;
   --color-bone-muted: #b9b4a8;
-  --color-bone-faint: #807c72;
+  --color-bone-faint: #948f83;
 
   /* Fonts (wired up in app/layout.tsx via next/font) */
   --font-display: var(--font-oswald), "Arial Narrow", sans-serif;

@@ -27,6 +27,7 @@ export function BillingToggle({
         type="button"
         role="switch"
         aria-checked={annual}
+        aria-label="Bill annually"
         onClick={() => onChange(!annual)}
         className="relative h-6 w-11 cursor-pointer rounded-full border border-line bg-charcoal-2 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bronze focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
       >
