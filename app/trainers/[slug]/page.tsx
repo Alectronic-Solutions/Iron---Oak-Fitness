@@ -9,7 +9,7 @@ import { CertificationList } from "@/components/trainers/CertificationList";
 import { SpecialtyBadges } from "@/components/trainers/SpecialtyBadges";
 import { trainers, getTrainerBySlug } from "@/lib/data/trainers";
 import { getClassesByCoach } from "@/lib/data/classes";
-import { trainerPersonSchema } from "@/lib/structuredData";
+import { serializeJsonLd, trainerPersonSchema } from "@/lib/structuredData";
 
 type Params = { params: Promise<{ slug: string }> };
 
@@ -38,7 +38,7 @@ export default async function TrainerProfilePage({ params }: Params) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(trainerPersonSchema(trainer)),
+          __html: serializeJsonLd(trainerPersonSchema(trainer)),
         }}
       />
       <Link

@@ -10,7 +10,6 @@ import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { TestimonialCarousel } from "@/components/ui/TestimonialCarousel";
 import { TiltCard } from "@/components/ui/TiltCard";
-import { ParallaxBg } from "@/components/ui/ParallaxBg";
 import { VideoCrossfadeBg } from "@/components/ui/VideoCrossfadeBg";
 import { PhotoBand } from "@/components/ui/PhotoBand";
 import { ClassCard } from "@/components/schedule/ClassCard";

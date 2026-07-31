@@ -1,24 +1,10 @@
 import type { Metadata, Viewport } from "next";
-import { Oswald, Inter } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { MobileCtaBar } from "@/components/layout/MobileCtaBar";
 import { SITE_URL, SITE_NAME, SITE_TAGLINE, SITE_DESCRIPTION } from "@/lib/site";
-import { localBusinessSchema } from "@/lib/structuredData";
-
-const oswald = Oswald({
-  subsets: ["latin"],
-  variable: "--font-oswald",
-  weight: ["400", "500", "600", "700"],
-  display: "swap",
-});
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
-});
+import { localBusinessSchema, serializeJsonLd } from "@/lib/structuredData";
 
 export const viewport: Viewport = {
   themeColor: "#0e0f11",
@@ -56,12 +42,12 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${oswald.variable} ${inter.variable}`}>
+    <html lang="en" data-scroll-behavior="smooth">
       <body className="bg-ink text-bone antialiased">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(localBusinessSchema()),
+            __html: serializeJsonLd(localBusinessSchema()),
           }}
         />
         <a

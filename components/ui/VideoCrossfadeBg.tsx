@@ -12,6 +12,7 @@ interface VideoCrossfadeBgProps {
 }
 
 const FADE_MS = 1200;
+const PRELOAD_LEAD_SECONDS = 3;
 
 export function VideoCrossfadeBg({
   sources,
@@ -22,22 +23,25 @@ export function VideoCrossfadeBg({
   const shouldReduce = useReducedMotion();
   const [activeIndex, setActiveIndex] = useState(0);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+  const preloadedIndexes = useRef(new Set<number>());
+
+  function preloadVideo(index: number) {
+    const video = videoRefs.current[index];
+    if (!video || preloadedIndexes.current.has(index)) return;
+
+    preloadedIndexes.current.add(index);
+    video.preload = "auto";
+    video.load();
+  }
 
   useEffect(() => {
     if (shouldReduce) return;
 
     const active = videoRefs.current[activeIndex];
     if (active) {
+      preloadedIndexes.current.add(activeIndex);
       active.currentTime = 0;
       void active.play();
-    }
-
-    const next = (activeIndex + 1) % sources.length;
-    const nextVideo = videoRefs.current[next];
-    // Preload the upcoming clip once the current one starts playing.
-    if (nextVideo && nextVideo.preload !== "auto") {
-      nextVideo.preload = "auto";
-      nextVideo.load();
     }
 
     // Pause every other clip so they don't keep decoding off-screen.
@@ -49,6 +53,19 @@ export function VideoCrossfadeBg({
   const handleEnded = (index: number) => {
     if (index !== activeIndex) return;
     setActiveIndex((index + 1) % sources.length);
+  };
+
+  const handleTimeUpdate = (index: number, video: HTMLVideoElement) => {
+    if (
+      sources.length < 2 ||
+      index !== activeIndex ||
+      shouldReduce ||
+      !Number.isFinite(video.duration)
+    ) return;
+
+    if (video.duration - video.currentTime <= PRELOAD_LEAD_SECONDS) {
+      preloadVideo((index + 1) % sources.length);
+    }
   };
 
   return (
@@ -69,6 +86,7 @@ export function VideoCrossfadeBg({
               loop={shouldReduce ? index === 0 : false}
               preload={index === 0 ? "auto" : "none"}
               onEnded={() => handleEnded(index)}
+              onTimeUpdate={(event) => handleTimeUpdate(index, event.currentTarget)}
               className="absolute inset-0 h-full w-full object-cover transition-opacity ease-out-soft"
               style={{
                 opacity: isActive ? 1 : 0,

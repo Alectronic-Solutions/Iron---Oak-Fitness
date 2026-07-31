@@ -38,6 +38,7 @@ export default function ContactPage() {
               style={{ border: 0, display: "block", filter: "invert(0.9) hue-rotate(180deg) saturate(0.6)" }}
               loading="lazy"
               referrerPolicy="no-referrer"
+              sandbox="allow-scripts allow-popups"
             />
           </div>
 

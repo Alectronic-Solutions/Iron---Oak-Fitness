@@ -6,7 +6,7 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { PricingGrid } from "@/components/membership/PricingGrid";
 import { ClassPackCard } from "@/components/membership/ClassPackCard";
 import { plans, classPacks } from "@/lib/data/plans";
-import { membershipOffersSchema } from "@/lib/structuredData";
+import { membershipOffersSchema, serializeJsonLd } from "@/lib/structuredData";
 
 export const metadata: Metadata = {
   title: "Membership",
@@ -66,7 +66,7 @@ export default function MembershipPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(membershipOffersSchema(plans)),
+          __html: serializeJsonLd(membershipOffersSchema(plans)),
         }}
       />
       {/* Hero */}

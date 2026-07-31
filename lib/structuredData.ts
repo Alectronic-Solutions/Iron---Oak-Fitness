@@ -2,6 +2,19 @@ import { SITE_NAME, SITE_URL } from "@/lib/site";
 import type { MembershipPlan } from "@/types";
 import type { Trainer } from "@/types";
 
+/**
+ * Prevent schema data from terminating its script element if a future CMS or
+ * API supplies text containing HTML-significant characters.
+ */
+export function serializeJsonLd(data: unknown): string {
+  return JSON.stringify(data)
+    .replace(/</g, "\\u003c")
+    .replace(/>/g, "\\u003e")
+    .replace(/&/g, "\\u0026")
+    .replace(/\u2028/g, "\\u2028")
+    .replace(/\u2029/g, "\\u2029");
+}
+
 /** JSON-LD for the gym itself, rendered once in the root layout. */
 export function localBusinessSchema() {
   return {

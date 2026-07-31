@@ -15,19 +15,10 @@ const navLinks = [
   { href: "/membership", label: "Membership" },
 ];
 
-function Wordmark({ onClick }: { onClick?: () => void }) {
-  const pathname = usePathname();
-
+function Wordmark() {
   return (
     <Link
       href="/"
-      onClick={(e) => {
-        onClick?.();
-        if (pathname === "/") {
-          e.preventDefault();
-          window.location.href = "/";
-        }
-      }}
       className="group flex items-center gap-2.5"
       aria-label="Iron & Oak Fitness - home"
     >
