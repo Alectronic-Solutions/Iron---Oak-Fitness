@@ -67,25 +67,6 @@ export interface MembershipPlan {
   badge?: string;
 }
 
-/** A display-ready, denormalized schedule entry joining slot + class + trainer data. */
-export interface WeeklyScheduleEntry {
-  id: string;
-  classSlug: string;
-  className: string;
-  tagline: string;
-  category: ClassCategory;
-  intensity: Intensity;
-  tags: string[];
-  trainerId: string;
-  trainerName: string;
-  day: Weekday;
-  start: string;
-  end: string;
-  durationMin: number;
-  capacity: number;
-  booked: number;
-}
-
 export interface ClassPack {
   id: string;
   name: string;

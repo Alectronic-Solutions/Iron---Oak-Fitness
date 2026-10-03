@@ -1,6 +1,4 @@
-import { ArrowRight } from "lucide-react";
-import { Avatar } from "@/components/ui/Avatar";
-import { Badge } from "@/components/ui/Badge";
+import { ArrowRight, Check } from "lucide-react";
 import { CountUp } from "@/components/ui/CountUp";
 import { ButtonLink } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -10,21 +8,47 @@ import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { TestimonialCarousel } from "@/components/ui/TestimonialCarousel";
 import { TiltCard } from "@/components/ui/TiltCard";
-import { VideoCrossfadeBg } from "@/components/ui/VideoCrossfadeBg";
+import { VideoCrossfadeBg, type VideoSource } from "@/components/ui/VideoCrossfadeBg";
 import { PhotoBand } from "@/components/ui/PhotoBand";
 import { ClassCard } from "@/components/schedule/ClassCard";
+import { TodayAtStudio } from "@/components/schedule/TodayAtStudio";
 import { TrainerCard } from "@/components/trainers/TrainerCard";
 import { classes } from "@/lib/data/classes";
 import { trainers } from "@/lib/data/trainers";
-import { getClass } from "@/lib/data/classes";
-import { getTrainer } from "@/lib/data/trainers";
-import { getSlotsByDay, spotsLeft } from "@/lib/data/schedule";
+import { schedule } from "@/lib/data/schedule";
+import { classPacks, perClass, plans } from "@/lib/data/plans";
+import { pageMetadata, SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE } from "@/lib/site";
+import { cn, formatPrice } from "@/lib/utils";
+
+export const metadata = {
+  ...pageMetadata({ title: SITE_NAME, description: SITE_DESCRIPTION, path: "/" }),
+  // The root title template would otherwise append the site name twice.
+  title: { absolute: `${SITE_NAME} — ${SITE_TAGLINE}` },
+};
 
 const stats = [
   { value: "1,200+", label: "Members" },
-  { value: "40+", label: "Classes / week" },
-  { value: "12", label: "Expert coaches" },
-  { value: "4.9", label: "Average rating" },
+  { value: String(schedule.length), label: "Classes / week" },
+  { value: String(Math.max(...schedule.map((s) => s.capacity))), label: "Max class size" },
+  { value: "4.9", label: "Member rating" },
+];
+
+const cheapestPlan = plans.reduce((a, b) => (a.priceMonthly <= b.priceMonthly ? a : b));
+const popularPlan = plans.find((p) => p.highlighted) ?? plans[0];
+const dropIn = classPacks.find((p) => p.classes === 1);
+const bestPack = classPacks.reduce((a, b) => (perClass(a) <= perClass(b) ? a : b));
+
+const priceTiles = [
+  { k: "From", v: formatPrice(cheapestPlan.priceMonthly), s: `/mo · ${cheapestPlan.name}` },
+  { k: "Most popular", v: formatPrice(popularPlan.priceMonthly), s: `/mo · ${popularPlan.name}` },
+  ...(dropIn ? [{ k: "Drop-in", v: formatPrice(dropIn.price), s: "per class" }] : []),
+  { k: bestPack.name, v: formatPrice(bestPack.price), s: `${formatPrice(perClass(bestPack))} / class` },
+];
+
+const startSteps = [
+  { n: "01", title: "Book a free class", body: "Pick any session on the timetable. No card needed." },
+  { n: "02", title: "Meet your coach", body: "Arrive 10 minutes early for a tour and a quick movement check." },
+  { n: "03", title: "Choose your plan", body: "Membership, class pack or PT - switch anytime as life changes." },
 ];
 
 const valueProps = [
@@ -83,21 +107,35 @@ const testimonials = [
 
 const featuredSlugs = ["iron-foundations", "ember-hiit", "oak-flow"];
 
-const heroVideos = [
-  "https://videos.pexels.com/video-files/33514741/14253794_1920_1080_25fps.mp4",
-  "https://videos.pexels.com/video-files/5319998/5319998-uhd_2560_1440_25fps.mp4",
-  "https://videos.pexels.com/video-files/4108624/4108624-uhd_2560_1440_25fps.mp4",
+const heroPoster =
+  "https://images.pexels.com/photos/1552242/pexels-photo-1552242.jpeg?auto=compress&cs=tinysrgb&w=1280";
+
+// Desktop: 1080p (3.7–6 MB). Phones: 960×540 (1.1–1.7 MB). Under a 72% dark
+// overlay the difference is invisible, and 4K renditions were 12–15 MB each.
+const heroVideos: VideoSource[] = [
+  {
+    src: "https://videos.pexels.com/video-files/33514741/14253794_1920_1080_25fps.mp4",
+    mobileSrc: "https://videos.pexels.com/video-files/33514741/14253786_960_540_25fps.mp4",
+  },
+  {
+    src: "https://videos.pexels.com/video-files/5319998/5319998-hd_1920_1080_25fps.mp4",
+    mobileSrc: "https://videos.pexels.com/video-files/5319998/5319998-sd_960_540_25fps.mp4",
+  },
+  {
+    src: "https://videos.pexels.com/video-files/4108624/4108624-hd_1920_1080_25fps.mp4",
+    mobileSrc: "https://videos.pexels.com/video-files/4108624/4108624-sd_960_540_25fps.mp4",
+  },
 ];
 
 export default function Home() {
   const featured = classes.filter((c) => featuredSlugs.includes(c.slug));
-  const todaySlots = getSlotsByDay("Mon").slice(0, 3);
 
   return (
     <>
       {/* ─────────────────── Hero ─────────────────── */}
       <VideoCrossfadeBg
         sources={heroVideos}
+        poster={heroPoster}
         overlayClass="bg-ink/72"
         className="min-h-[calc(100svh-4rem)]"
       >
@@ -106,88 +144,57 @@ export default function Home() {
         {/* bottom fade to site bg */}
         <div className="pointer-events-none absolute inset-0 z-10 bg-linear-to-b from-transparent via-transparent to-ink/80" />
 
-        <div className="shell relative z-20 grid min-h-[calc(100svh-4rem)] gap-10 pt-14 pb-20 sm:pt-16 sm:pb-24 md:grid-cols-2 md:items-center md:pt-20 md:pb-28 lg:gap-16 lg:pt-24 lg:pb-32">
+        <div className="shell relative z-20 grid min-h-[calc(100svh-4rem)] gap-10 pt-10 pb-16 sm:pt-16 sm:pb-24 md:grid-cols-2 md:items-center md:pt-20 md:pb-28 lg:gap-16 lg:pt-24 lg:pb-32">
           <div className="animate-rise">
             <span className="eyebrow-ruled inline-flex">
               Boutique strength &amp; conditioning
             </span>
             <HeroHeading />
-            <p className="mt-6 max-w-md text-lg leading-relaxed text-bone-muted">
+            <p className="mt-6 max-w-md text-base leading-relaxed text-bone-muted sm:text-lg">
               Coaching, classes and community built to make you stronger for
               life, not just for summer. Train on iron, grounded in oak.
             </p>
-            <div className="mt-10 flex flex-wrap gap-3">
-              <ButtonLink href="/membership" size="lg">
-                Start your membership
+            <div className="mt-8 flex flex-col gap-3 sm:mt-10 sm:flex-row sm:flex-wrap">
+              <ButtonLink href="/free-trial" size="lg">
+                Try a free class
               </ButtonLink>
-              <ButtonLink href="/schedule" variant="secondary" size="lg">
-                View the schedule
+              <ButtonLink href="/membership" variant="secondary" size="lg">
+                See membership
               </ButtonLink>
             </div>
-            <p className="mt-5 text-xs text-bone-faint">
-              First class free · No joining fee · Cancel anytime
-            </p>
+            <ul className="mt-5 flex flex-wrap gap-x-4 gap-y-1 text-xs text-bone-muted">
+              {["First class free", "No joining fee", "Cancel anytime"].map((t) => (
+                <li key={t} className="inline-flex items-center gap-1.5">
+                  <Check className="h-3.5 w-3.5 text-oak" />
+                  {t}
+                </li>
+              ))}
+            </ul>
           </div>
 
-          {/* Hero product card: today's classes */}
+          {/* Hero product card: the next sessions, live */}
           <div className="animate-panel md:pl-6 lg:pl-8">
-            <Card className="bg-white/5 p-6 shadow-2xl backdrop-blur-md border-white/10">
-              <div className="flex items-center justify-between">
-                <p className="eyebrow">Today at the studio</p>
-                <Badge tone="success">Open now</Badge>
-              </div>
-              <div className="mt-5 space-y-3">
-                {todaySlots.map((slot) => {
-                  const cls = getClass(slot.classSlug);
-                  const coach = getTrainer(slot.trainerId);
-                  const left = spotsLeft(slot);
-                  return (
-                    <div
-                      key={slot.id}
-                      className="flex items-center gap-4 rounded-xl border border-white/8 bg-ink/50 p-3 backdrop-blur-sm"
-                    >
-                      <p className="w-14 shrink-0 font-display text-lg text-bone">
-                        {slot.start}
-                      </p>
-                      <div className="min-w-0 flex-1">
-                        <p className="truncate font-display uppercase text-bone">
-                          {cls?.title}
-                        </p>
-                        <p className="truncate text-xs text-bone-faint flex items-center gap-1.5">
-                          {coach && (
-                            <Avatar initials={coach.initials} image={coach.image} colorKey={coach.id} size="sm" className="h-4 w-4 text-[8px] shrink-0" />
-                          )}
-                          {coach?.name}
-                        </p>
-                      </div>
-                      <Badge
-                        tone={left === 0 ? "danger" : left <= 3 ? "oak" : "success"}
-                      >
-                        {left === 0 ? "Waitlist" : `${left} left`}
-                      </Badge>
-                    </div>
-                  );
-                })}
-              </div>
-              <ButtonLink
-                href="/schedule"
-                variant="secondary"
-                className="mt-5 w-full"
-              >
-                See full schedule
-              </ButtonLink>
-            </Card>
+            <TodayAtStudio />
           </div>
         </div>
       </VideoCrossfadeBg>
 
       {/* ─────────────────── Stats ─────────────────── */}
       <section className="border-y border-oak/20 bg-ink">
-        <div className="shell grid grid-cols-2 divide-x divide-line sm:grid-cols-4">
+        <div className="shell grid grid-cols-2 sm:grid-cols-4">
           {stats.map((s, i) => (
-            <Reveal key={s.label} delay={i * 0.1} className="py-10 text-center sm:py-20">
+            <Reveal
+              key={s.label}
+              delay={i * 0.1}
+              className={cn(
+                "border-line py-10 text-center sm:py-20",
+                i % 2 === 1 && "border-l",
+                i >= 2 && "border-t sm:border-t-0",
+                i === 2 && "sm:border-l",
+              )}
+            >
               <div className="mx-auto mb-3 w-8 border-t border-oak/30" />
-              <p className="text-shine font-display text-4xl sm:text-7xl">
+              <p className="text-shine font-display text-5xl sm:text-7xl">
                 <CountUp value={s.value} />
               </p>
               <p className="mt-2 text-xs uppercase tracking-wider text-bone-faint">
@@ -291,7 +298,7 @@ export default function Home() {
       {/* ─────────────────── Membership band ─────────────────── */}
       <section className="shell py-20 sm:py-28">
         <Reveal>
-          <div className="overflow-hidden rounded-3xl border border-line bg-linear-to-br from-moss/30 via-charcoal to-charcoal-2 p-8 sm:p-14">
+          <div className="overflow-hidden rounded-3xl border border-line bg-linear-to-br from-moss/30 via-charcoal to-charcoal-2 p-6 sm:p-14">
             <div className="grid gap-10 md:grid-cols-2 md:items-center">
               <div>
                 <SectionHeading
@@ -300,18 +307,18 @@ export default function Home() {
                   title="One studio. Every way to train."
                   description="Go unlimited, keep it casual with a class pack, or add 1-on-1 coaching. No contracts, no joining fees. Just train."
                 />
-                <ButtonLink href="/membership" size="lg" className="mt-10">
-                  See membership options
-                </ButtonLink>
+                <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                  <ButtonLink href="/membership" size="lg">
+                    See membership options
+                  </ButtonLink>
+                  <ButtonLink href="/membership#compare" variant="secondary" size="lg">
+                    Compare plans
+                  </ButtonLink>
+                </div>
               </div>
               <div className="grid grid-cols-2 gap-3">
-                {[
-                  { k: "From", v: "$79", s: "/mo · Essential" },
-                  { k: "Most popular", v: "$129", s: "/mo · Unlimited" },
-                  { k: "Drop-in", v: "$22", s: "per class" },
-                  { k: "10-pack", v: "$170", s: "$17 / class" },
-                ].map((p) => (
-                  <Card key={p.s} className="bg-ink/30 p-5">
+                {priceTiles.map((p) => (
+                  <Card key={p.s} className="bg-ink/30 p-4 sm:p-5">
                     <p className="text-[11px] uppercase tracking-wider text-bone-faint">
                       {p.k}
                     </p>
@@ -338,6 +345,27 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ─────────────────── Getting started ─────────────────── */}
+      <section className="border-t border-line bg-charcoal py-20 sm:py-28">
+        <div className="shell">
+          <SectionHeading eyebrow="Getting started" title="Three steps to your first session" />
+          <ol className="mt-12 grid gap-8 sm:grid-cols-3">
+            {startSteps.map((step, i) => (
+              <li key={step.n}>
+                <Reveal delay={i * 0.08} className="border-t border-oak/40 pt-5">
+                  <p className="font-display text-5xl text-oak/60">{step.n}</p>
+                  <h3 className="mt-3 text-xl uppercase text-bone">{step.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-bone-muted">{step.body}</p>
+                </Reveal>
+              </li>
+            ))}
+          </ol>
+          <ButtonLink href="/free-trial" size="lg" className="mt-12 w-full sm:w-auto">
+            Book your free class
+          </ButtonLink>
+        </div>
+      </section>
+
       {/* ─────────────────── Photo band 3 ─────────────────── */}
       <PhotoBand
         src="https://images.pexels.com/photos/1552106/pexels-photo-1552106.jpeg?auto=compress&cs=tinysrgb&w=1920"
@@ -361,11 +389,11 @@ export default function Home() {
             <br />
             Just one session, on us.
           </p>
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-            <ButtonLink href="/membership" size="lg">
+          <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <ButtonLink href="/free-trial" size="lg" className="w-full sm:w-auto">
               Claim your free class
             </ButtonLink>
-            <ButtonLink href="/contact" variant="secondary" size="lg">
+            <ButtonLink href="/contact" variant="secondary" size="lg" className="w-full sm:w-auto">
               Get in touch
             </ButtonLink>
           </div>

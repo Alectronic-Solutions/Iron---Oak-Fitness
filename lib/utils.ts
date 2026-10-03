@@ -51,3 +51,6 @@ export function displayPrice(monthly: number, annual: boolean): number {
   const base = annual ? monthly * (1 - ANNUAL_DISCOUNT) : monthly;
   return Math.round(base);
 }
+
+/** Deliberately loose: catches typos without rejecting valid addresses. */
+export const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

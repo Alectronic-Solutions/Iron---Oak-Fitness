@@ -1,18 +1,21 @@
-import type { Metadata } from "next";
-import { Check, ChevronDown, Minus } from "lucide-react";
+import { ArrowRight, Check, Minus } from "lucide-react";
 import { ButtonLink } from "@/components/ui/Button";
+import { FaqList } from "@/components/ui/FaqList";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { PricingGrid } from "@/components/membership/PricingGrid";
 import { ClassPackCard } from "@/components/membership/ClassPackCard";
 import { plans, classPacks } from "@/lib/data/plans";
+import { getFaqGroup } from "@/lib/data/faqs";
+import { pageMetadata } from "@/lib/site";
 import { membershipOffersSchema, serializeJsonLd } from "@/lib/structuredData";
 
-export const metadata: Metadata = {
-  title: "Membership",
+export const metadata = pageMetadata({
+  title: "Membership & Pricing",
   description:
-    "Memberships, class packs and drop-ins at Iron & Oak Fitness. No contracts, no joining fees.",
-};
+    "Memberships from $79/month, class packs from $17 a class, and drop-ins. No contracts, no joining fees, cancel anytime.",
+  path: "/membership",
+});
 
 type Cell = string | boolean;
 
@@ -27,28 +30,6 @@ const comparison: { feature: string; values: [Cell, Cell, Cell] }[] = [
   { feature: "Body-composition assessments", values: [false, false, true] },
 ];
 
-const faqs = [
-  {
-    q: "Is there a joining fee?",
-    a: "Never. You pay for your membership and nothing else - no sign-up fees, no hidden extras.",
-  },
-  {
-    q: "Can I cancel anytime?",
-    a: "Yes. Memberships are month-to-month. Cancel whenever you like with no penalty.",
-  },
-  {
-    q: "Do class packs expire?",
-    a: "Class packs are valid for the window shown on each pack (30–120 days), giving you flexibility without locking you in.",
-  },
-  {
-    q: "Can I freeze my membership?",
-    a: "Absolutely - you can freeze your membership for up to two months each year if life gets in the way.",
-  },
-  {
-    q: "What does the free first class include?",
-    a: "Any group class on the timetable, on us. Just book it and show up - no card required.",
-  },
-];
 
 function Cell({ value }: { value: Cell }) {
   if (value === true)
@@ -57,10 +38,12 @@ function Cell({ value }: { value: Cell }) {
     return (
       <Minus className="mx-auto h-5 w-5 text-bone-faint" aria-label="Not included" />
     );
-  return <span className="text-sm text-bone">{value}</span>;
+  return <span className="text-xs text-bone sm:text-sm">{value}</span>;
 }
 
 export default function MembershipPage() {
+  const faqs = getFaqGroup("membership")?.faqs ?? [];
+
   return (
     <div>
       <script
@@ -73,13 +56,21 @@ export default function MembershipPage() {
       <section className="grain border-b border-line">
         <div className="shell py-14 text-center sm:py-20">
           <p className="eyebrow">Membership</p>
-          <h1 className="mx-auto mt-4 max-w-3xl text-4xl uppercase leading-[0.95] text-bone sm:text-6xl">
+          <h1 className="mx-auto mt-4 max-w-3xl text-5xl uppercase leading-[0.95] text-bone sm:text-6xl md:text-7xl">
             Train your way
           </h1>
           <p className="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-bone-muted">
             Go unlimited, keep it casual with a class pack, or drop in when it
             suits. No contracts. No joining fees. Cancel anytime.
           </p>
+          <ul className="mx-auto mt-6 flex max-w-xl flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-bone-muted">
+            {["First class free", "Freeze up to 2 months", "Switch plans anytime"].map((t) => (
+              <li key={t} className="inline-flex items-center gap-2">
+                <Check className="h-4 w-4 text-oak" />
+                {t}
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
@@ -89,7 +80,7 @@ export default function MembershipPage() {
       </section>
 
       {/* Comparison */}
-      <section className="border-y border-line bg-charcoal py-16 sm:py-24">
+      <section id="compare" className="border-y border-line bg-charcoal py-16 sm:py-24">
         <div className="shell">
           <SectionHeading
             eyebrow="Compare"
@@ -98,8 +89,8 @@ export default function MembershipPage() {
             className="mb-10"
           />
           {/* Mobile stacked layout */}
-          <div className="sm:hidden space-y-3">
-            <div className="grid grid-cols-4 gap-2 border-b border-line pb-3">
+          <div className="sm:hidden">
+            <div className="sticky top-16 z-10 grid grid-cols-[1.3fr_1fr_1fr_1fr] gap-2 border-b border-line bg-charcoal py-3">
               <div />
               {plans.map((p) => (
                 <p key={p.id} className="text-center font-display text-xs uppercase text-bone leading-tight">
@@ -108,8 +99,8 @@ export default function MembershipPage() {
               ))}
             </div>
             {comparison.map((row) => (
-              <div key={row.feature} className="grid grid-cols-4 gap-2 border-b border-line py-2.5 last:border-0">
-                <p className="text-xs text-bone-muted leading-snug">{row.feature}</p>
+              <div key={row.feature} className="grid grid-cols-[1.3fr_1fr_1fr_1fr] items-center gap-2 border-b border-line py-3 last:border-0">
+                <p className="text-xs leading-snug text-bone-muted">{row.feature}</p>
                 {row.values.map((v, i) => (
                   <div key={i} className="flex justify-center">
                     <Cell value={v} />
@@ -156,7 +147,7 @@ export default function MembershipPage() {
       </section>
 
       {/* Class packs */}
-      <section className="shell py-16 sm:py-24">
+      <section id="packs" className="shell py-16 sm:py-24">
         <SectionHeading
           eyebrow="No commitment"
           title="Class packs & drop-ins"
@@ -176,21 +167,11 @@ export default function MembershipPage() {
         <div className="shell max-w-3xl">
           <SectionHeading eyebrow="Good to know" title="Questions, answered" />
           <div className="mt-10">
-            {faqs.map((faq) => (
-              <details
-                key={faq.q}
-                className="group border-b border-line py-4"
-              >
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-display text-base uppercase text-bone">
-                  {faq.q}
-                  <ChevronDown className="h-5 w-5 shrink-0 text-oak transition-transform group-open:rotate-180" />
-                </summary>
-                <p className="mt-3 text-sm leading-relaxed text-bone-muted">
-                  {faq.a}
-                </p>
-              </details>
-            ))}
+            <FaqList faqs={faqs} />
           </div>
+          <ButtonLink href="/faq" variant="ghost" className="-mx-6 mt-6">
+            All FAQs <ArrowRight className="h-4 w-4" />
+          </ButtonLink>
         </div>
       </section>
 
@@ -201,7 +182,7 @@ export default function MembershipPage() {
             Still deciding?{" "}<br />Try a class free.
           </h2>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-            <ButtonLink href="/schedule" size="lg">
+            <ButtonLink href="/free-trial" size="lg">
               Book a free class
             </ButtonLink>
             <ButtonLink href="/contact" variant="secondary" size="lg">

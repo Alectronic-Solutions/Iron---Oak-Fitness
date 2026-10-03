@@ -3,6 +3,7 @@ import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { MobileCtaBar } from "@/components/layout/MobileCtaBar";
+import { MotionProvider } from "@/components/layout/MotionProvider";
 import { SITE_URL, SITE_NAME, SITE_TAGLINE, SITE_DESCRIPTION } from "@/lib/site";
 import { localBusinessSchema, serializeJsonLd } from "@/lib/structuredData";
 
@@ -14,13 +15,10 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: `${SITE_NAME} - ${SITE_TAGLINE}`,
+    default: `${SITE_NAME} — ${SITE_TAGLINE}`,
     template: `%s · ${SITE_NAME}`,
   },
   description: SITE_DESCRIPTION,
-  alternates: {
-    canonical: "/",
-  },
   openGraph: {
     type: "website",
     url: SITE_URL,
@@ -56,14 +54,16 @@ export default function RootLayout({
         >
           Skip to content
         </a>
-        <div className="flex min-h-dvh flex-col">
-          <Header />
-          <main id="main-content" className="flex-1">
-            {children}
-          </main>
-          <Footer />
-        </div>
-        <MobileCtaBar />
+        <MotionProvider>
+          <div className="flex min-h-dvh flex-col">
+            <Header />
+            <main id="main-content" tabIndex={-1} className="flex-1 outline-none">
+              {children}
+            </main>
+            <Footer />
+          </div>
+          <MobileCtaBar />
+        </MotionProvider>
       </body>
     </html>
   );

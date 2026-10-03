@@ -16,7 +16,7 @@ export function BillingToggle({
         type="button"
         onClick={() => onChange(false)}
         className={cn(
-          "cursor-pointer font-display uppercase tracking-widest transition-colors",
+          "min-h-11 cursor-pointer font-display uppercase tracking-widest transition-colors",
           !annual ? "text-bone" : "text-bone-faint hover:text-bone-muted",
         )}
       >
@@ -45,7 +45,7 @@ export function BillingToggle({
         type="button"
         onClick={() => onChange(true)}
         className={cn(
-          "cursor-pointer font-display uppercase tracking-widest transition-colors",
+          "min-h-11 cursor-pointer font-display uppercase tracking-widest transition-colors",
           annual ? "text-bone" : "text-bone-faint hover:text-bone-muted",
         )}
       >

@@ -20,7 +20,7 @@ export function PhotoFeatureCard({
   return (
     <div
       className={cn(
-        "group relative flex aspect-[3/4] w-full flex-col justify-end overflow-hidden rounded-2xl border border-line",
+        "group relative flex aspect-[4/3] w-full sm:aspect-[3/4] flex-col justify-end overflow-hidden rounded-2xl border border-line",
         className,
       )}
     >
@@ -28,7 +28,7 @@ export function PhotoFeatureCard({
         src={src}
         alt=""
         fill
-        sizes="(min-width: 768px) 25vw, 50vw"
+        sizes="(min-width: 768px) 25vw, (min-width: 640px) 50vw, 100vw"
         className="object-cover transition-transform duration-500 ease-out-soft group-hover:scale-105"
         style={focus ? { objectPosition: focus } : undefined}
       />

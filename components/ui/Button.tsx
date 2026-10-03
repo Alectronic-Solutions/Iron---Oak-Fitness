@@ -17,7 +17,7 @@ const variants: Record<Variant, string> = {
 };
 
 const sizes: Record<Size, string> = {
-  sm: "h-9 px-4 text-xs",
+  sm: "h-10 px-4 text-xs",
   md: "h-11 px-6 text-sm",
   lg: "h-14 px-8 text-sm sm:text-base",
 };
@@ -31,7 +31,11 @@ export function buttonClasses({
   size?: Size;
   className?: string;
 } = {}): string {
-  return cn(base, variants[variant], sizes[size], className);
+  // Without tailwind-merge, base `inline-flex` would beat a caller's `hidden`
+  // (same property, later in the stylesheet). Let `hidden sm:inline-flex`
+  // style responsive visibility work by dropping the default display.
+  const hidden = className?.split(/\s+/).includes("hidden");
+  return cn(hidden ? base.replace("inline-flex ", "") : base, variants[variant], sizes[size], className);
 }
 
 interface ButtonProps extends ComponentProps<"button"> {

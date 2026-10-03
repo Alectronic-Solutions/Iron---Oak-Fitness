@@ -5,21 +5,12 @@ import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
 import { TiltCard } from "@/components/ui/TiltCard";
 import { getTrainer } from "@/lib/data/trainers";
+import { CATEGORY_STYLE } from "@/lib/categories";
 import type { FitnessClass } from "@/types";
-import type { ComponentProps } from "react";
-
-type Tone = ComponentProps<typeof Badge>["tone"];
-
-const categoryTone: Record<string, Tone> = {
-  Strength: "oak",
-  Conditioning: "conditioning",
-  Mobility: "mobility",
-  Endurance: "endurance",
-};
 
 export function ClassCard({ fitnessClass }: { fitnessClass: FitnessClass }) {
   const coach = getTrainer(fitnessClass.coachId);
-  const tone = categoryTone[fitnessClass.category] ?? "default";
+  const tone = CATEGORY_STYLE[fitnessClass.category].tone;
 
   return (
     <Link

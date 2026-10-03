@@ -5,16 +5,16 @@ import { Check } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
-import { cn } from "@/lib/utils";
+import { cn, EMAIL_RE } from "@/lib/utils";
 
+// text-base on mobile: iOS Safari zooms the page when focusing inputs < 16px.
 const fieldClass =
-  "w-full rounded-lg border border-line bg-ink/40 px-4 py-3 text-sm text-bone placeholder:text-bone-faint focus:border-oak focus:outline-none";
+  "w-full rounded-lg border border-line bg-ink/40 px-4 py-3 text-base text-bone sm:text-sm placeholder:text-bone-faint focus:border-oak focus:outline-none";
 const labelClass =
   "mb-1.5 block text-xs uppercase tracking-wider text-bone-faint";
 const errorFieldClass = "border-red-500/60 focus:border-red-500/60";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 type Errors = Partial<Record<"name" | "email" | "message", string>>;
 
@@ -74,9 +74,9 @@ export function ContactForm() {
             <div className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-emerald-500/15 text-emerald-300">
               <Check className="h-7 w-7" />
             </div>
-            <h3 className="mt-4 font-display text-2xl uppercase text-bone">
+            <h2 className="mt-4 font-display text-2xl uppercase text-bone">
               Message sent
-            </h3>
+            </h2>
             <p className="mt-2 text-sm text-bone-muted">
               Thanks for reaching out - we&apos;ll be in touch within one business
               day.
@@ -106,6 +106,7 @@ export function ContactForm() {
             className="space-y-4"
             noValidate
           >
+            <h2 className="font-display text-2xl uppercase text-bone">Send a message</h2>
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
                 <label htmlFor="name" className={labelClass}>
@@ -114,6 +115,7 @@ export function ContactForm() {
                 <input
                   id="name"
                   name="name"
+                  autoComplete="name"
                   placeholder="Your name"
                   aria-invalid={!!errors.name}
                   aria-describedby={errors.name ? "name-error" : undefined}
@@ -129,6 +131,8 @@ export function ContactForm() {
                   id="email"
                   name="email"
                   type="email"
+                  inputMode="email"
+                  autoComplete="email"
                   placeholder="you@email.com"
                   aria-invalid={!!errors.email}
                   aria-describedby={errors.email ? "email-error" : undefined}

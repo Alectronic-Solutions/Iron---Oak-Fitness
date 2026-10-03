@@ -1,17 +1,29 @@
-import type { Metadata } from "next";
+import { Check } from "lucide-react";
 import { ButtonLink } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
+import { FaqList } from "@/components/ui/FaqList";
 import { PhotoFeatureCard } from "@/components/ui/PhotoFeatureCard";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { TiltCard } from "@/components/ui/TiltCard";
 import { TrainingBooker } from "@/components/trainers/TrainingBooker";
 import { ParallaxBg } from "@/components/ui/ParallaxBg";
 import { PhotoBand } from "@/components/ui/PhotoBand";
+import { getFaqGroup } from "@/lib/data/faqs";
+import { pageMetadata } from "@/lib/site";
+import { cn, formatPrice } from "@/lib/utils";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Personal Training",
   description:
-    "1-on-1 personal training at Iron & Oak - tailored programming and coaching built around your goals.",
-};
+    "1-on-1 personal training at Iron & Oak - a program written for you, a specialist coach in your corner, and sessions from $76.",
+  path: "/training",
+});
+
+const ptPricing = [
+  { name: "Single session", sessions: 1, price: 95, note: "Try it out" },
+  { name: "5 sessions", sessions: 5, price: 425, note: "Most booked", highlighted: true },
+  { name: "10 sessions", sessions: 10, price: 760, note: "Best value" },
+];
 
 const benefits = [
   {
@@ -54,6 +66,8 @@ const steps = [
 ];
 
 export default function TrainingPage() {
+  const faqs = getFaqGroup("training")?.faqs ?? [];
+
   return (
     <div>
       {/* Hero */}
@@ -77,9 +91,14 @@ export default function TrainingPage() {
               Nothing moves the needle like dedicated coaching. Work directly
               with a specialist on a program built entirely around you.
             </p>
-            <ButtonLink href="#book" size="lg" className="mt-8">
-              Book a session
-            </ButtonLink>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <ButtonLink href="#book" size="lg">
+                Book a session
+              </ButtonLink>
+              <ButtonLink href="/free-trial?goal=pt" variant="secondary" size="lg">
+                Free 20-min consult
+              </ButtonLink>
+            </div>
           </div>
         </div>
       </ParallaxBg>
@@ -131,15 +150,64 @@ export default function TrainingPage() {
         </div>
       </section>
 
+      {/* Pricing */}
+      <section id="pricing" className="shell py-16 sm:py-24">
+        <SectionHeading
+          eyebrow="Pricing"
+          title="Invest in yourself"
+          description="Unlimited members get one session a month included, Performance members get four. Anyone can add more."
+        />
+        <div className="mt-10 grid gap-4 md:grid-cols-3">
+          {ptPricing.map((p) => (
+            <Card
+              key={p.name}
+              className={cn("flex flex-col p-6", p.highlighted && "border-oak/60 bg-charcoal-2")}
+            >
+              <p className="eyebrow">{p.note}</p>
+              <h3 className="mt-2 text-2xl uppercase text-bone">{p.name}</h3>
+              <p className="mt-4 font-display text-5xl text-bone">{formatPrice(p.price)}</p>
+              <p className="mt-1 text-sm text-bone-muted">
+                {p.sessions > 1
+                  ? `${formatPrice(p.price / p.sessions)} per session · valid 90 days`
+                  : "60 minutes · any coach"}
+              </p>
+              <ButtonLink
+                href="#book"
+                variant={p.highlighted ? "primary" : "secondary"}
+                className="mt-6 w-full"
+              >
+                Book now
+              </ButtonLink>
+            </Card>
+          ))}
+        </div>
+        <ul className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm text-bone-muted">
+          {["Written program included", "Progress check-ins every 4 weeks", "Reschedule free up to 24h before"].map((t) => (
+            <li key={t} className="inline-flex items-center gap-2">
+              <Check className="h-4 w-4 text-oak" />
+              {t}
+            </li>
+          ))}
+        </ul>
+      </section>
+
       {/* Booker */}
-      <section id="book" className="shell scroll-mt-20 py-16 sm:py-24">
+      <section id="book" className="border-t border-line bg-charcoal py-16 sm:py-24">
+        <div className="shell">
         <SectionHeading
           eyebrow="Book now"
           title="Reserve your 1-on-1"
-          description="Pick a coach and a time that works. Personal-training sessions are included with Performance memberships, or available as add-ons."
-          className="mb-12"
+          description="Pick a coach and a time that works. Your coach confirms within a few hours."
+          className="mb-10"
         />
         <TrainingBooker />
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="shell max-w-3xl py-16 sm:py-24">
+        <SectionHeading eyebrow="Good to know" title="PT questions" className="mb-8" />
+        <FaqList faqs={faqs} />
       </section>
     </div>
   );

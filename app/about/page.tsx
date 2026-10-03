@@ -1,22 +1,46 @@
-import type { Metadata } from "next";
-import { Hammer, TreePine } from "lucide-react";
+import {
+  Bath,
+  Bike,
+  Dumbbell,
+  Flame,
+  Hammer,
+  Lock,
+  Snowflake,
+  TreePine,
+  Wifi,
+} from "lucide-react";
 import { ButtonLink } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ParallaxBg } from "@/components/ui/ParallaxBg";
 import { PhotoBand } from "@/components/ui/PhotoBand";
+import { schedule } from "@/lib/data/schedule";
+import { trainers } from "@/lib/data/trainers";
+import { pageMetadata } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "About",
+export const metadata = pageMetadata({
+  title: "About & Facility",
   description:
-    "The story behind Iron & Oak Fitness - strength built to last, grounded in good coaching.",
-};
+    "The story behind Iron & Oak Fitness - strength built to last, grounded in good coaching - and a tour of our 6,000 sq ft studio.",
+  path: "/about",
+});
 
 const stats = [
   { value: "2019", label: "Founded" },
   { value: "1,200+", label: "Members" },
-  { value: "12", label: "Coaches" },
-  { value: "40+", label: "Classes / week" },
+  { value: String(trainers.length), label: "Specialist coaches" },
+  { value: String(schedule.length), label: "Classes / week" },
+];
+
+const amenities = [
+  { icon: Dumbbell, title: "8 lifting platforms", body: "Eleiko bars, calibrated plates, competition racks." },
+  { icon: Bike, title: "Conditioning zone", body: "Air bikes, rowers, ski-ergs and a 20 m turf sled lane." },
+  { icon: Flame, title: "Infrared sauna", body: "Fits six. Included with Performance, $10 otherwise." },
+  { icon: Snowflake, title: "Cold plunge", body: "Kept at 10 °C for post-session recovery." },
+  { icon: Bath, title: "Premium changing rooms", body: "Private showers, towels and quality toiletries." },
+  { icon: Lock, title: "Day lockers", body: "Digital locks - nothing to bring, nothing to lose." },
+  { icon: Wifi, title: "Members' lounge", body: "Wi-Fi, filtered water and a quiet place to work." },
+  { icon: TreePine, title: "Mobility studio", body: "Sprung oak floor for flow, yoga and recovery." },
 ];
 
 const values = [
@@ -113,6 +137,28 @@ export default function AboutPage() {
         </div>
       </section>
 
+      {/* Facility */}
+      <section id="facility" className="shell py-16 sm:py-24">
+        <SectionHeading
+          eyebrow="The facility"
+          title="6,000 sq ft, built to train"
+          description="Everything you need to train hard and recover well - and nothing you don't."
+        />
+        <ul className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {amenities.map(({ icon: Icon, title, body }) => (
+            <li key={title}>
+              <Card className="h-full p-5">
+                <span className="grid h-10 w-10 place-items-center rounded-lg bg-oak/15 text-oak-soft">
+                  <Icon className="h-5 w-5" />
+                </span>
+                <h3 className="mt-4 text-lg uppercase text-bone">{title}</h3>
+                <p className="mt-1 text-sm leading-relaxed text-bone-muted">{body}</p>
+              </Card>
+            </li>
+          ))}
+        </ul>
+      </section>
+
       {/* Photo band */}
       <PhotoBand
         src="https://images.pexels.com/photos/1552242/pexels-photo-1552242.jpeg?auto=compress&cs=tinysrgb&w=1920"
@@ -123,18 +169,21 @@ export default function AboutPage() {
       />
 
       {/* Values */}
-      <section className="shell py-16 sm:py-24">
+      <section className="bg-charcoal">
+        <div className="shell py-16 sm:py-24">
         <SectionHeading
           eyebrow="The principles we coach by"
           title="What makes us different"
         />
-        <div className="mt-12 grid gap-5 sm:grid-cols-2">
-          {values.map((v) => (
-            <Card key={v.title} className="p-6">
-              <h3 className="text-xl uppercase text-bone">{v.title}</h3>
+        <div className="mt-12 grid gap-x-10 gap-y-8 sm:grid-cols-2">
+          {values.map((v, i) => (
+            <div key={v.title} className="border-t border-line pt-5">
+              <p className="font-display text-sm text-oak">0{i + 1}</p>
+              <h3 className="mt-1 text-xl uppercase text-bone">{v.title}</h3>
               <p className="mt-2 leading-relaxed text-bone-muted">{v.body}</p>
-            </Card>
+            </div>
           ))}
+        </div>
         </div>
       </section>
 

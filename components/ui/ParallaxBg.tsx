@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import Image from "next/image";
-import { useScroll, useTransform, motion, useReducedMotion } from "framer-motion";
+import { useScroll, useTransform, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 interface ParallaxBgProps {
@@ -26,7 +26,6 @@ export function ParallaxBg({
   priority = false,
 }: ParallaxBgProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const shouldReduce = useReducedMotion();
 
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -34,15 +33,17 @@ export function ParallaxBg({
   });
 
   const travel = speed * 220;
-  const yFull = useTransform(scrollYProgress, [0, 1], [`${travel}px`, `-${travel}px`]);
-  const yStill = useTransform(scrollYProgress, [0, 1], ["0px", "0px"]);
-  const scaleFull = useTransform(scrollYProgress, [0, 0.5, 1], [1.08, 1, 1.08]);
-  const y = shouldReduce ? yStill : yFull;
-  const scale = shouldReduce ? 1 : scaleFull;
+  const y = useTransform(scrollYProgress, [0, 1], [`${travel}px`, `-${travel}px`]);
+  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [1.08, 1, 1.08]);
 
   return (
     <div ref={ref} className={cn("relative overflow-hidden", className)}>
-      <motion.div style={{ y, scale }} className="absolute inset-[-15%] w-full">
+      {/* Reduced motion: the !important class beats framer's inline transform,
+          so markup stays identical between server and client. */}
+      <motion.div
+        style={{ y, scale }}
+        className="absolute inset-[-15%] w-full will-change-transform motion-reduce:transform-none!"
+      >
         <Image
           src={src}
           alt={alt}
@@ -55,9 +56,7 @@ export function ParallaxBg({
       {/* Dark overlay */}
       <div className={cn("absolute inset-0 z-10", overlayClass)} />
       {/* Content slot */}
-      {children && (
-        <div className="relative z-20">{children}</div>
-      )}
+      {children && <div className="relative z-20">{children}</div>}
     </div>
   );
 }

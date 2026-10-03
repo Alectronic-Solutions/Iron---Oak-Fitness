@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
-import { ArrowRight, Check, Clock } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight, Check, Clock, LogOut } from "lucide-react";
 import { Avatar } from "@/components/ui/Avatar";
 import { Badge } from "@/components/ui/Badge";
 import { ButtonLink } from "@/components/ui/Button";
@@ -7,11 +7,16 @@ import { Card } from "@/components/ui/Card";
 import { PortalBookings } from "@/components/portal/PortalBookings";
 import { demoMember } from "@/lib/data/members";
 import { getPlan } from "@/lib/data/plans";
+import { pageMetadata } from "@/lib/site";
 import { formatPrice } from "@/lib/utils";
 
-export const metadata: Metadata = {
-  title: "Member Portal",
-  description: "Your Iron & Oak membership, bookings and payments.",
+export const metadata = {
+  ...pageMetadata({
+    title: "Member Portal",
+    description: "Your Iron & Oak membership, bookings and payments.",
+    path: "/account",
+  }),
+  robots: { index: false, follow: false },
 };
 
 function Stat({ label, value }: { label: string; value: string }) {
@@ -52,11 +57,16 @@ export default function AccountPage() {
             </p>
           </div>
         </div>
-        {plan && (
-          <Badge tone="oak" className="self-start sm:self-auto">
-            {plan.name} member
-          </Badge>
-        )}
+        <div className="flex items-center gap-3 self-start sm:self-auto">
+          {plan && <Badge tone="oak">{plan.name} member</Badge>}
+          <Link
+            href="/login"
+            className="inline-flex min-h-11 items-center gap-2 text-sm text-bone-muted transition-colors hover:text-bone"
+          >
+            <LogOut className="h-4 w-4" />
+            Sign out
+          </Link>
+        </div>
       </div>
 
       <p className="mt-5 rounded-lg border border-line bg-charcoal px-4 py-2.5 text-xs text-bone-faint">
@@ -72,7 +82,7 @@ export default function AccountPage() {
       </div>
 
       {/* Main grid */}
-      <div className="mt-12 grid gap-10 md:grid-cols-[1fr_280px] lg:grid-cols-3">
+      <div className="mt-12 grid grid-cols-1 gap-10 md:grid-cols-[minmax(0,1fr)_280px] lg:grid-cols-3">
         <div className="space-y-12 lg:col-span-2">
           {/* Bookings */}
           <section>

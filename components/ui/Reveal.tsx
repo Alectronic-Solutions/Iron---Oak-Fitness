@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 
 interface RevealProps {
   children: React.ReactNode;
@@ -9,28 +9,24 @@ interface RevealProps {
   className?: string;
 }
 
+/** Fades content in as it scrolls into view. Reduced motion is handled
+ *  globally by MotionProvider. */
 export function Reveal({
   children,
   delay = 0,
   direction = "up",
   className,
 }: RevealProps) {
-  const reduced = useReducedMotion();
-
-  const initial = reduced
-    ? { opacity: 1, y: 0, x: 0 }
-    : {
-        opacity: 0,
-        y: direction === "up" ? 20 : 0,
-        x: direction === "left" ? -16 : 0,
-      };
-
   return (
     <motion.div
       className={className}
-      initial={initial}
+      initial={{
+        opacity: 0,
+        y: direction === "up" ? 20 : 0,
+        x: direction === "left" ? -16 : 0,
+      }}
       whileInView={{ opacity: 1, y: 0, x: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
+      viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1], delay }}
     >
       {children}

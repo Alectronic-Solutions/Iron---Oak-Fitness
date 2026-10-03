@@ -18,8 +18,12 @@ export function TrainerCard({ trainer }: { trainer: Trainer }) {
               <ArrowUpRight className="h-5 w-5 text-bone-faint transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-oak-soft" />
             </div>
             <h3 className="mt-4 text-xl uppercase text-bone">{trainer.name}</h3>
+            <span className="sr-only">, {trainer.yearsExperience} years experience</span>
             <p className="text-sm text-oak-soft">{trainer.role}</p>
-            <div className="mt-4 flex flex-wrap gap-2">
+            <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-bone-muted">
+              {trainer.bio}
+            </p>
+            <div className="mt-auto flex flex-wrap gap-2 pt-4">
               {trainer.specialties.slice(0, 3).map((s) => (
                 <Badge key={s}>{s}</Badge>
               ))}

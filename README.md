@@ -1,6 +1,6 @@
 # Iron & Oak Fitness
 
-![Next.js](https://img.shields.io/badge/Next.js_15-black?logo=next.js)
+![Next.js](https://img.shields.io/badge/Next.js_16-black?logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS_v4-06B6D4?logo=tailwindcss&logoColor=white)
 
@@ -16,20 +16,24 @@ payment, authentication, or database behind it.
 
 | Page | What it shows |
 |------|--------------|
-| **Home** | Premium brand landing with hero, animated stats, testimonial carousel, and photo bands |
-| **Schedule** | Weekly class timetable with day/category filtering, capacity indicators, and booking flow |
-| **Training** | 1-on-1 personal training pitch with trainer selector and appointment booking |
-| **Trainers** | Trainer directory and individual profiles with availability calendars |
-| **Membership** | Subscription tiers, class packs, feature comparison table, and FAQ accordion |
-| **Account** | Simulated member portal with bookings, plan info, and payment history |
-| **About / Contact** | Brand story, values, contact form, and studio hours |
-| **Legal** | Full privacy policy, terms of service, and cookie policy |
+| **Navigation** | Utility bar (live open/closed status), desktop mega-menu dropdowns, mobile accordion drawer, sticky mobile action bar |
+| **Home** | Video hero (poster-only on phones), live "up next" classes, stats, testimonials, getting-started steps |
+| **Schedule** | Rolling 7-day timetable starting today, category filters, capacity bars, waitlists, deep links (`?class=forge&day=Tue`) |
+| **Classes** | Class index by discipline + detail pages with weekly times and related classes |
+| **Training / Coaches** | PT pricing, coach picker and appointment booking, coach profiles |
+| **Membership** | Tiers with annual billing, comparison table, class packs, FAQ |
+| **Free trial** | 3-step free-class / consult booking flow |
+| **Join** | Simulated 3-step checkout with order summary |
+| **Login / Account** | Simulated sign-in and member portal (bookings, plan, payments) |
+| **About / Contact / FAQ** | Story, facility, values, map, hours, contact form, grouped FAQ |
+| **Legal** | Privacy policy, terms of service, cookie policy |
+| **SEO** | Per-page canonicals, sitemap, JSON-LD (gym with hours/address, breadcrumbs, FAQ, courses, offers) |
 
 ---
 
 ## Tech stack
 
-- **[Next.js 15](https://nextjs.org)** (App Router) + **TypeScript** — strict mode, Server Components by default
+- **[Next.js 16](https://nextjs.org)** (App Router, static export) + **TypeScript** — strict mode, Server Components by default
 - **[Tailwind CSS v4](https://tailwindcss.com)** — design tokens via `@theme` in `globals.css`
 - **[framer-motion](https://www.framer.com/motion/)** — scroll-triggered reveals, parallax, and nav drawer
 - **[lucide-react](https://lucide.dev)** — icons
@@ -60,10 +64,11 @@ Open [http://localhost:3000](http://localhost:3000). Designed mobile-first — t
 
 ```
 app/           # Routes (App Router). One folder per route.
-components/    # ui/ primitives + layout/, schedule/, trainers/, membership/, portal/ feature components
-lib/data/      # Typed mock data (classes, trainers, schedule, plans, members)
+components/    # ui/ primitives + layout/, schedule/, trainers/, membership/, portal/, trial/, join/, auth/ feature components
+lib/site.ts    # Site constants: studio address/hours, navigation, pageMetadata() helper
+lib/data/      # Typed mock data (classes, trainers, schedule, plans, members, faqs)
 types/         # Shared TypeScript interfaces
-public/        # Static assets (favicon, robots.txt, sitemap.xml)
+public/        # Static assets (robots.txt + sitemap.xml are generated from app/)
 ```
 
 ---

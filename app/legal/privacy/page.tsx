@@ -1,9 +1,10 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Privacy Policy",
   description: "How Iron & Oak Fitness collects, uses, and protects your personal information.",
-};
+  path: "/legal/privacy",
+});
 
 const sections = [
   {
@@ -82,7 +83,7 @@ const sections = [
 
 export default function PrivacyPage() {
   return (
-    <main className="shell py-16 md:py-24">
+    <div className="shell py-12 md:py-24">
       <div className="mx-auto max-w-2xl">
         <p className="eyebrow mb-3">Legal</p>
         <h1 className="font-display text-4xl uppercase tracking-tight text-bone md:text-5xl">
@@ -114,6 +115,6 @@ export default function PrivacyPage() {
           ))}
         </div>
       </div>
-    </main>
+    </div>
   );
 }

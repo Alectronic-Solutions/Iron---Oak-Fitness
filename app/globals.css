@@ -45,6 +45,8 @@
   html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
+    /* Anchor jumps (#book, #packs...) land below the sticky header. */
+    scroll-padding-top: 6rem;
   }
 
   body {
@@ -53,6 +55,14 @@
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  button,
+  a,
+  summary,
+  [role="button"] {
+    touch-action: manipulation;
   }
 
   h1,
@@ -272,6 +282,15 @@
   }
 }
 
+@keyframes clipReveal {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
 @keyframes textShine {
   to {
     background-position: -220% center;
@@ -290,6 +309,18 @@
   animation: riseIn 0.5s var(--ease-out-soft) both;
 }
 
+@utility animate-clip {
+  animation: clipReveal 0.9s var(--ease-out-soft) 0.5s both;
+}
+
+/* Horizontal scrollers (day pickers, chip rows) without a visible bar. */
+@utility scrollbar-none {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 /* Respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -299,6 +330,7 @@
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }

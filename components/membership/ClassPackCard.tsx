@@ -25,7 +25,7 @@ export function ClassPackCard({ pack }: { pack: ClassPack }) {
         {pack.validityDays} days
       </p>
 
-      <ButtonLink href="/account" variant="secondary" className="mt-6 w-full">
+      <ButtonLink href={`/join?pack=${pack.id}`} variant="secondary" className="mt-6 w-full">
         Buy pack
       </ButtonLink>
     </Card>

@@ -63,12 +63,12 @@ export function PricingCard({
       </ul>
 
       <ButtonLink
-        href="/account"
+        href={`/join?plan=${plan.id}${annual ? "&billing=annual" : ""}`}
         variant={plan.highlighted ? "primary" : "secondary"}
         size="lg"
         className="mt-8 w-full"
       >
-        Choose {plan.name}
+        {plan.ctaText}
       </ButtonLink>
     </Card>
   );

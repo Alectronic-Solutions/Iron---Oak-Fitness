@@ -1,9 +1,10 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Terms of Service",
   description: "Terms and conditions governing your use of Iron & Oak Fitness services and membership.",
-};
+  path: "/legal/terms",
+});
 
 const sections = [
   {
@@ -88,7 +89,7 @@ const sections = [
 
 export default function TermsPage() {
   return (
-    <main className="shell py-16 md:py-24">
+    <div className="shell py-12 md:py-24">
       <div className="mx-auto max-w-2xl">
         <p className="eyebrow mb-3">Legal</p>
         <h1 className="font-display text-4xl uppercase tracking-tight text-bone md:text-5xl">
@@ -120,6 +121,6 @@ export default function TermsPage() {
           ))}
         </div>
       </div>
-    </main>
+    </div>
   );
 }

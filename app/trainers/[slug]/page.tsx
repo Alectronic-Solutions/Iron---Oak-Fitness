@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ArrowUpRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { Avatar } from "@/components/ui/Avatar";
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { Reveal } from "@/components/ui/Reveal";
 import { AppointmentBooker } from "@/components/trainers/AppointmentBooker";
 import { CertificationList } from "@/components/trainers/CertificationList";
 import { SpecialtyBadges } from "@/components/trainers/SpecialtyBadges";
 import { trainers, getTrainerBySlug } from "@/lib/data/trainers";
 import { getClassesByCoach } from "@/lib/data/classes";
+import { pageMetadata } from "@/lib/site";
 import { serializeJsonLd, trainerPersonSchema } from "@/lib/structuredData";
 
 type Params = { params: Promise<{ slug: string }> };
@@ -20,10 +22,12 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
   const trainer = getTrainerBySlug(slug);
-  return {
-    title: trainer?.name ?? "Trainer",
-    description: trainer ? `${trainer.role} at Iron & Oak Fitness.` : undefined,
-  };
+  if (!trainer) return { title: "Coach" };
+  return pageMetadata({
+    title: `${trainer.name}, ${trainer.role}`,
+    description: `${trainer.role} at Iron & Oak Fitness. ${trainer.bio}`,
+    path: `/trainers/${trainer.slug}`,
+  });
 }
 
 export default async function TrainerProfilePage({ params }: Params) {
@@ -41,20 +45,19 @@ export default async function TrainerProfilePage({ params }: Params) {
           __html: serializeJsonLd(trainerPersonSchema(trainer)),
         }}
       />
-      <Link
-        href="/trainers"
-        className="inline-flex items-center gap-2 text-sm text-bone-muted transition-colors hover:text-bone"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        Back to trainers
-      </Link>
+      <Breadcrumbs
+        items={[
+          { name: "Coaches", path: "/trainers" },
+          { name: trainer.name, path: `/trainers/${trainer.slug}` },
+        ]}
+      />
 
-      <div className="mt-6 grid gap-10 md:grid-cols-[1fr_280px] lg:grid-cols-3">
+      <div className="mt-6 grid grid-cols-1 gap-10 md:grid-cols-[minmax(0,1fr)_300px] lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-16">
         {/* Main */}
-        <div className="lg:col-span-2">
+        <div>
           <Reveal>
             <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
-              <Avatar initials={trainer.initials} size="xl" image={trainer.image} />
+              <Avatar initials={trainer.initials} size="xl" image={trainer.image} colorKey={trainer.id} />
               <div>
                 <h1 className="text-4xl uppercase leading-none text-bone sm:text-5xl">
                   {trainer.name}
@@ -75,14 +78,14 @@ export default async function TrainerProfilePage({ params }: Params) {
 
           <Reveal delay={0.1}>
             <div className="mt-10">
-              <p className="eyebrow">Specialties</p>
+              <h2 className="eyebrow">Specialties</h2>
               <SpecialtyBadges specialties={trainer.specialties} />
             </div>
           </Reveal>
 
           <Reveal delay={0.14}>
             <div className="mt-10">
-              <p className="eyebrow">Certifications</p>
+              <h2 className="eyebrow">Certifications</h2>
               <CertificationList certifications={trainer.certifications} />
             </div>
           </Reveal>
@@ -90,13 +93,13 @@ export default async function TrainerProfilePage({ params }: Params) {
           {coachedClasses.length > 0 && (
             <Reveal delay={0.18}>
               <div className="mt-10">
-                <p className="eyebrow">Classes {trainer.name.split(" ")[0]} leads</p>
+                <h2 className="eyebrow">Classes {trainer.name.split(" ")[0]} leads</h2>
                 <div className="mt-3 grid gap-3 sm:grid-cols-2">
                   {coachedClasses.map((c) => (
                     <Link
                       key={c.slug}
                       href={`/classes/${c.slug}`}
-                      className="group flex items-center justify-between gap-3 rounded-xl border border-line bg-charcoal p-4 transition-colors hover:border-oak/50"
+                      className="group flex min-h-16 items-center justify-between gap-3 rounded-xl border border-line bg-charcoal p-4 transition-colors hover:border-oak/50"
                     >
                       <div>
                         <p className="font-display uppercase text-bone">
@@ -115,7 +118,7 @@ export default async function TrainerProfilePage({ params }: Params) {
 
         {/* Sidebar */}
         <aside>
-          <div className="lg:sticky lg:top-24">
+          <div className="md:sticky md:top-24">
             <AppointmentBooker trainer={trainer} />
           </div>
         </aside>

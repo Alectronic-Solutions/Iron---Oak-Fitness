@@ -10,6 +10,8 @@ interface SectionHeadingProps {
   align?: "left" | "center";
   className?: string;
   animated?: boolean;
+  /** Use "h1" when this is the page's main heading. */
+  as?: "h1" | "h2";
 }
 
 export function SectionHeading({
@@ -18,8 +20,11 @@ export function SectionHeading({
   description,
   align = "left",
   className,
-  animated = true,
+  animated,
+  as: Heading = "h2",
 }: SectionHeadingProps) {
+  // Page titles render immediately (they're usually the LCP element).
+  const shouldAnimate = animated ?? Heading !== "h1";
   const content = (
     <div
       className={cn(
@@ -29,18 +34,18 @@ export function SectionHeading({
       )}
     >
       {eyebrow && <p className="eyebrow">{eyebrow}</p>}
-      <h2 className="mt-3 text-4xl uppercase tracking-tight text-bone sm:text-5xl md:text-6xl">
+      <Heading className="mt-3 text-4xl uppercase tracking-tight text-bone sm:text-5xl md:text-6xl">
         {title}
-      </h2>
+      </Heading>
       {description && (
-        <p className="mt-4 text-base leading-relaxed text-bone-muted">
+        <p className="mt-4 text-base leading-relaxed text-bone-muted sm:text-lg">
           {description}
         </p>
       )}
     </div>
   );
 
-  if (!animated) return content;
+  if (!shouldAnimate) return content;
 
   return <Reveal>{content}</Reveal>;
 }
